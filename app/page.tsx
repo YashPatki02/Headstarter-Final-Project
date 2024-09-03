@@ -6,6 +6,7 @@ import Header from "@/components/Header";
 import Hero from "@/components/Hero";
 import Pricing from "@/components/Pricing";
 import Testimonial from "@/components/Testimonial";
+import Footer from "@/components/Footer";
 import { SignedIn, SignedOut, useUser, useAuth } from "@clerk/nextjs";
 import { useEffect } from "react";
 
@@ -56,9 +57,9 @@ export default function Home() {
             <Testimonial    />
             <FAQ />
             <CTA /> */}
+            <Footer />
             </SignedOut>
             <SignedIn>
-                <Header />
                 <div>You are signed in.</div>
             </SignedIn>
         </>
