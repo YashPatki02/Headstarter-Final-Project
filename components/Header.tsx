@@ -2,6 +2,8 @@ import React from "react";
 import { Merge } from "lucide-react";
 import { animate } from "framer-motion";
 import Link from "next/link";
+import { Button } from "./ui/button";
+import { SignedIn, SignedOut, UserButton } from "@clerk/clerk-react";
 
 const Header = () => {
     const goToFeatures = () => {
@@ -18,14 +20,14 @@ const Header = () => {
     };
 
     return (
-        <header className="flex flex-row w-full px-4 sm:px-20 h-20 items-center shadow-inner border-b-[1px] border-primary">
+        <header className="flex flex-row w-full px-4 sm:px-12 h-20 items-center shadow-inner border-b-[1px] border-primary">
             <div>
                 <Link href="/" className="flex flex-row items-center gap-2">
                     <Merge className="text-primary" size={20} strokeWidth={3} />
                     <h1 className="text-2xl font-bold">contribu.</h1>
                 </Link>
             </div>
-            <nav className="ml-auto">
+            <nav className="ml-auto mr-6">
                 <ul className="flex flex-row gap-6 sm:gap-12 text-muted-foreground">
                     {/* <li>about.</li> */}
                     <li className="cursor-pointer" onClick={goToFeatures}>
@@ -33,6 +35,14 @@ const Header = () => {
                     </li>
                 </ul>
             </nav>
+            <SignedOut>
+                <Button asChild>
+                    <Link href="/sign-in">get started</Link>
+                </Button>
+            </SignedOut>
+            <SignedIn>
+                <UserButton />
+            </SignedIn>
         </header>
     );
 };

@@ -39,7 +39,7 @@ const Hero = () => {
                     </Button>
 
                     <Button asChild>
-                        <Link href="/signup">get started</Link>
+                        <Link href="/sign-in">get started</Link>
                     </Button>
                 </div>
             </div>
