@@ -41,11 +41,11 @@ export default function RootLayout({
                                 <div className="sticky top-0 z-10">
                                     <DashboardHeader />
                                 </div>
-                                <main className="flex flex-col pt-4 flex-grow">
+                                <main className="flex flex-col flex-grow">
                                     <div className="w-full overflow-x-auto">
-                                        <div className="sm:h-[calc(99vh-80px)] overflow-auto ">
+                                        <div className="sm:h-[calc(99vh-50px)] overflow-auto ">
                                             <div className="w-full flex justify-center mx-auto overflow-auto h-[calc(100vh - 120px)] overflow-y-auto relative">
-                                                <div className="w-full px-3 sm:px-10 ">
+                                                <div className="w-full px-3 sm:px-10 bg-[#F5F6FA]">
                                                     {children}
                                                 </div>
                                             </div>
