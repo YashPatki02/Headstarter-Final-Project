@@ -36,7 +36,7 @@ const Sidebar = () => {
     };
 
     return isSidebarExpanded ? (
-        <aside className="w-1/2 z-50 fixed inset-x-0 h-screen bg-white border-r-[1px] sm:relative sm:w-1/3 md:w-1/4 lg:w-1/5 xl:w-1/6">
+        <aside className="w-1/2 z-50 fixed inset-x-0 h-screen bg-white border-r-[1px] sm:relative sm:w-1/3 md:w-1/4 lg:w-1/6">
             <div className="flex flex-col gap-2 h-full justify-start mt-5 px-2">
                 <TooltipProvider>
                     <Tooltip>
@@ -44,7 +44,7 @@ const Sidebar = () => {
                             <ChevronLeft
                                 strokeWidth={2}
                                 onClick={toggleSidebar}
-                                className="w-5 h-5 sm:w-6 sm:h-6 mb-4 ml-2 cursor-pointer"
+                                className="w-5 h-5 sm:w-6 sm:h-6 mb-4 ml-4 cursor-pointer"
                             />
                         </TooltipTrigger>
                         <TooltipContent side="right">
@@ -53,7 +53,7 @@ const Sidebar = () => {
                     </Tooltip>
                 </TooltipProvider>
 
-                <div className="flex flex-col gap-3 px-2 mt-4 mb-2 overflow-y-auto">
+                <div className="flex flex-col gap-3 px-2 mt-1 mb-2 overflow-y-auto">
                     {PUBLIC_MENU.map((item, idx) => (
                         <MenuItem
                             key={idx}
@@ -92,7 +92,7 @@ const Sidebar = () => {
                     </Tooltip>
                 </TooltipProvider>
 
-                <div className="flex flex-col gap-4 px-2 md:px-6 mt-8 mb-4 overflow-y-auto ">
+                <div className="flex flex-col gap-3 px-2 md:px-6 mt-4 mb-4 overflow-y-auto ">
                     {PUBLIC_MENU.map((item, idx) => (
                         <MenuItem
                             key={idx}
@@ -102,7 +102,7 @@ const Sidebar = () => {
                     ))}
                 </div>
                 <Separator orientation="horizontal" />
-                <div className="flex flex-col mt-4 gap-4 md:px-6 overflow-y-auto">
+                <div className="flex flex-col mt-4 gap-3 md:px-6 overflow-y-auto">
                     {PERSONAL_MENU.map((item, idx) => (
                         <MenuItem
                             key={idx}

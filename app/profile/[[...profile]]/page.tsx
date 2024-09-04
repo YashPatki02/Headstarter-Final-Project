@@ -1,3 +1,4 @@
+import { UserProfile } from "@clerk/nextjs";
 import React from "react";
 // import { auth, currentUser } from "@clerk/nextjs/server";
 
@@ -8,5 +9,9 @@ export default function Profile() {
     // console.log(userId);
     // console.log("current", current);
 
-    return <div>in Profile</div>;
+    return (
+        <div className="flex flex-col items-center justify-center py-2 mb-20">
+            <UserProfile />
+        </div>
+    );
 }
