@@ -35,7 +35,7 @@ export default function RootLayout({
                         <Footer />
                     </SignedOut>
                     <SignedIn>
-                        <div className="flex justify-start items-start overflow-hidden">
+                        <div className="flex justify-start items-start overflow-y-hidden">
                             <Sidebar />
                             <div className="flex-1">
                                 <div className="sticky top-0 z-10">

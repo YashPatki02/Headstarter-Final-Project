@@ -1,4 +1,4 @@
-import { UserProfile } from "@clerk/nextjs";
+import { SignOutButton, UserProfile } from "@clerk/nextjs";
 import React from "react";
 // import { auth, currentUser } from "@clerk/nextjs/server";
 

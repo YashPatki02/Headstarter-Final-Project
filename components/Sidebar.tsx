@@ -44,7 +44,7 @@ const Sidebar = () => {
                             <ChevronLeft
                                 strokeWidth={2}
                                 onClick={toggleSidebar}
-                                className="w-5 h-5 sm:w-6 sm:h-6 mb-4 ml-4 cursor-pointer"
+                                className="w-4 h-4 sm:w-5 sm:h-5 mb-4 ml-4 cursor-pointer"
                             />
                         </TooltipTrigger>
                         <TooltipContent side="right">
@@ -83,7 +83,7 @@ const Sidebar = () => {
                             <ChevronRight
                                 strokeWidth={2}
                                 onClick={toggleSidebar}
-                                className="w-5 h-5 sm:w-6 sm:h-6 mb-4 cursor-pointer"
+                                className="w-4 h-4 sm:w-5 sm:h-5 mb-4 cursor-pointer"
                             />
                         </TooltipTrigger>
                         <TooltipContent side="right">
