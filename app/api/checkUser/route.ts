@@ -3,7 +3,7 @@ import { supabaseClient } from "@/lib/supabaseClient";
 
 // Handler for POST requests
 export async function POST(req: NextRequest) {
-    const { userId, firstName, lastName, emailAddress, username, token } =
+    const { userId, firstName, lastName, emailAddress, username, imageUrl, token } =
         await req.json();
 
     if (!userId) {
@@ -43,6 +43,7 @@ export async function POST(req: NextRequest) {
                     last_name: lastName || "",
                     email: emailAddress || "",
                     username: username || "",
+                    image_url: imageUrl || "",
                     role: "",
                     bio: "",
                     linkedin: "",

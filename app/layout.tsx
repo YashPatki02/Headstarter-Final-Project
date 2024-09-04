@@ -43,8 +43,8 @@ export default function RootLayout({
                                 </div>
                                 <main className="flex flex-col flex-grow">
                                     <div className="w-full overflow-x-auto">
-                                        <div className="sm:h-[calc(99vh-50px)] overflow-auto ">
-                                            <div className="w-full flex justify-center mx-auto overflow-auto h-[calc(100vh - 120px)] overflow-y-auto relative">
+                                        <div className="sm:h-[calc(99vh-50px)] overflow-auto">
+                                            <div className="w-full flex justify-center mx-auto overflow-auto h-[calc(100vh - 120px)] overflow-y-hidden relative">
                                                 <div className="w-full px-3 sm:px-10 bg-[#F5F6FA]">
                                                     {children}
                                                 </div>
