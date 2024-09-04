@@ -48,6 +48,8 @@ export async function POST(req: NextRequest) {
                     linkedin: "",
                     github: "",
                     portfolio: "",
+                    skills: [],
+                    interests: [],
                     created_at: new Date(),
                 },
             ]);

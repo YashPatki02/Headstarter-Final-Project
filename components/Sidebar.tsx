@@ -1,7 +1,7 @@
 "use client";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import React, { useEffect, useState } from "react";
-import { PERSONAL_MENU, PUBLIC_MENU } from "@/lib/constants";
+import { PERSONAL_MENU, PUBLIC_MENU, FOOTER_MENU } from "@/lib/constants";
 import MenuItem from "./MenuItem";
 import { cn } from "@/lib/utils";
 import { Button } from "./ui/button";
@@ -72,6 +72,16 @@ const Sidebar = () => {
                         />
                     ))}
                 </div>
+                <Separator orientation="horizontal" />
+                <div className="fixed bottom-4 flex flex-col gap-3 mt-2 px-2 overflow-y-auto">
+                    {FOOTER_MENU.map((item, idx) => (
+                        <MenuItem
+                            key={idx}
+                            item={item}
+                            isSidebarExpanded={isSidebarExpanded}
+                        />
+                    ))}
+                </div>
             </div>
         </aside>
     ) : (
@@ -104,6 +114,16 @@ const Sidebar = () => {
                 <Separator orientation="horizontal" />
                 <div className="flex flex-col mt-4 gap-3 md:px-6 overflow-y-auto">
                     {PERSONAL_MENU.map((item, idx) => (
+                        <MenuItem
+                            key={idx}
+                            item={item}
+                            isSidebarExpanded={isSidebarExpanded}
+                        />
+                    ))}
+                </div>
+                <Separator orientation="horizontal" />
+                <div className="fixed bottom-4 flex flex-col gap-3 mt-4 px-2 overflow-y-auto">
+                    {FOOTER_MENU.map((item, idx) => (
                         <MenuItem
                             key={idx}
                             item={item}

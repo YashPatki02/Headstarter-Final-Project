@@ -9,7 +9,7 @@ import {
     TooltipProvider,
     TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { Home, FileText, User, Folder, Mail } from "lucide-react";
+import { Home, FileText, User, Folder, Mail, FolderKanban, Settings } from "lucide-react";
 
 const MenuItem = ({
     item,
@@ -27,10 +27,12 @@ const MenuItem = ({
 
     const iconMap: Record<string, JSX.Element> = {
         home: <Home strokeWidth={2} />,
+        "folder-kanban": <FolderKanban strokeWidth={2} />,
         "file-text": <FileText strokeWidth={2} />,
         user: <User strokeWidth={2} />,
         folder: <Folder strokeWidth={2} />,
         mail: <Mail strokeWidth={2} />,
+        settings: <Settings strokeWidth={2} />,
     };
 
     return (
