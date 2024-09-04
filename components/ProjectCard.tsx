@@ -9,11 +9,8 @@ import {
 } from "@/components/ui/card";
 import Image from "next/image";
 import Link from "next/link";
-import { Button } from "@/components/ui/button";
 import { ProjectType } from "@/lib/types";
-import { Badge } from "./ui/badge";
 import AvatarCircles from "@/components/magicui/avatar-circles";
-import { MoveRight } from "lucide-react";
 import { useState, useEffect } from "react";
 
 export default function ProjectCard({
@@ -34,7 +31,7 @@ export default function ProjectCard({
 
     return (
         <Link href={`/projects/${project.id}`} passHref>
-            <Card className="relative w-[260px] cursor-pointer rounded-lg border-0 p-2 hover:bg-red-50">
+            <Card className="relative w-[260px] cursor-pointer rounded-lg border-0 p-2 hover:bg-gray-100">
                 {/* Thumbnail image at the top */}
                 {project.images && project.images.length > 0 && (
                     <div className="w-full h-[130px] bg-red-500 rounded-lg">
@@ -48,16 +45,16 @@ export default function ProjectCard({
                     </div>
                 )}
 
-                <Badge
-                    variant="outline"
-                    className="text-primary bg-background absolute top-4 right-4 text-xs"
-                >
-                    {project.status}
-                </Badge>
-
                 <CardHeader>
-                    <CardTitle className="text-md font-semibold pt-2 line-clamp-1">
+                    <CardTitle className="flex justify-between items-center text-md font-semibold pt-2">
                         {project.name}
+                        {project.status === "open to collaboration" ? (
+                            <div className="h-2 w-2 mr-1 rounded-full bg-green-500"></div>
+                        ) : project.status === "open to feature requests" ? (
+                            <div className="h-2 w-2 mr-1 rounded-full bg-cyan-500"></div>
+                        ) : (
+                            <div className="h-2 w-2 mr-1 rounded-full bg-red-500"></div>
+                        )}
                     </CardTitle>
                     <CardDescription className="text-xs text-muted-foreground line-clamp-2">
                         {project.description}
@@ -79,9 +76,7 @@ export default function ProjectCard({
                                 className="rounded-full border-2 border-white"
                             />
                         ))} */}
-                    {isMounted && (
-                        <AvatarCircles avatarUrls={avatarUrls}  />
-                    )}
+                    {isMounted && <AvatarCircles avatarUrls={avatarUrls} />}
                 </CardFooter>
             </Card>
         </Link>
