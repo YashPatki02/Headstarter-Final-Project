@@ -1,9 +1,9 @@
+"use client";
 import React from "react";
 import { Merge } from "lucide-react";
 import { animate } from "framer-motion";
 import Link from "next/link";
 import { Button } from "./ui/button";
-import { SignedIn, SignedOut, UserButton } from "@clerk/clerk-react";
 
 const Header = () => {
     const goToFeatures = () => {
@@ -35,14 +35,9 @@ const Header = () => {
                     </li>
                 </ul>
             </nav>
-            <SignedOut>
-                <Button asChild>
-                    <Link href="/sign-in">get started</Link>
-                </Button>
-            </SignedOut>
-            <SignedIn>
-                <UserButton />
-            </SignedIn>
+            <Button asChild>
+                <Link href="/sign-in">get started</Link>
+            </Button>
         </header>
     );
 };

@@ -1,23 +1,14 @@
 "use client";
-import CTA from "@/components/CTA";
-import FAQ from "@/components/FAQ";
-import Features from "@/components/Features";
-import Header from "@/components/Header";
-import Hero from "@/components/Hero";
-import Pricing from "@/components/Pricing";
-import Testimonial from "@/components/Testimonial";
-import Footer from "@/components/Footer";
-import { SignedIn, SignedOut, useUser, useAuth } from "@clerk/nextjs";
+import { useUser, useAuth } from "@clerk/nextjs";
 import { useEffect } from "react";
 
 export default function Home() {
-    // const { ...user } = useUser();
     const { getToken } = useAuth();
     const { user } = useUser();
 
     useEffect(() => {
         const checkUserInSupabase = async () => {
-            const token = await getToken({template: "supabase"});
+            const token = await getToken({ template: "supabase" });
             try {
                 const response = await fetch("/api/checkUser", {
                     method: "POST",
@@ -41,27 +32,20 @@ export default function Home() {
             }
         };
 
-
         if (user) {
-            checkUserInSupabase();
+            // checkUserInSupabase();
         }
     }, [user]);
 
     return (
         <>
-            <SignedOut>
-                <Header />
-                <Hero />
-                <Features />
-                {/* <Pricing />
-            <Testimonial    />
-            <FAQ />
-            <CTA /> */}
-            <Footer />
-            </SignedOut>
-            <SignedIn>
-                <div>You are signed in.</div>
-            </SignedIn>
+            <div>You are signed in.</div>
+            <div className="grid grid-cols-1 grid-rows-10 h-[200vh]">
+                <div className="col-span-1 row-span-1  bg-red-300">Header</div>
+                <div className="col-span-1 row-span-8 bg-green-300">Main content</div>
+                <div className="col-span-1 row-span-1 bg-blue-300">Footer</div>
+
+            </div>
         </>
     );
 }
