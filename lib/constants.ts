@@ -7,11 +7,11 @@ export const PUBLIC_MENU: SideNavItem[] = [
         path: "/",
         icon: "home",
     },
-    // {
-    //     title: "Projects",
-    //     path: "/projects",
-    //     icon: "folder-kanban",
-    // },
+    {
+        title: "Projects",
+        path: "/projects",
+        icon: "folder-kanban",
+    },
     {
         title: "Pitches",
         path: "/pitches",
@@ -26,11 +26,11 @@ export const PERSONAL_MENU: SideNavItem[] = [
         path: "/profile",
         icon: "user",
     },
-    {
-        title: "Projects",
-        path: "/projects",
-        icon: "folder-kanban",
-    },
+    // {
+    //     title: "Projects",
+    //     path: "/projects",
+    //     icon: "folder-kanban",
+    // },
     {
         title: "Messages",
         path: "/messages",
