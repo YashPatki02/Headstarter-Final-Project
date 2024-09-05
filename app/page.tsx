@@ -5,6 +5,7 @@ import { ArrowRight, Bell } from "lucide-react";
 import { useEffect } from "react";
 import Link from "next/link";
 import ProjectCard from "@/components/ProjectCard";
+import StatusBadge from "@/components/StatusBadge";
 
 export default function Home() {
     const { getToken } = useAuth();
@@ -236,26 +237,7 @@ export default function Home() {
                         <h2 className="text-lg font-semibold">
                             Projects For You
                         </h2>
-                        <div className="flex flex-col sm:flex-row sm:gap-6">
-                            <div className="flex gap-1 items-center">
-                                <div className="h-2 w-2 rounded-full bg-green-500"></div>
-                                <p className="text-xs text-muted-foreground line-clamp-1">
-                                    Collaboration
-                                </p>
-                            </div>
-                            <div className="flex gap-1 items-center">
-                                <div className="h-2 w-2 rounded-full bg-cyan-500"></div>
-                                <p className="text-xs text-muted-foreground">
-                                    Feature Requests
-                                </p>
-                            </div>
-                            <div className="flex gap-1 items-center">
-                                <div className="h-2 w-2 rounded-full bg-red-500"></div>
-                                <p className="text-xs text-muted-foreground">
-                                    Archived
-                                </p>
-                            </div>
-                        </div>
+
                         <Link href="/projects">
                             <Button
                                 className="text-xs text-muted-foreground"
@@ -266,7 +248,7 @@ export default function Home() {
                             </Button>
                         </Link>
                     </div>
-
+                    <StatusBadge />
                     <div className="flex flex-wrap gap-4 justify-start">
                         {projects.map((project) => (
                             <ProjectCard key={project.id} project={project} />
@@ -277,26 +259,7 @@ export default function Home() {
                 <div className="flex flex-col gap-2 w-full bg-background rounded-lg p-4 mb-8">
                     <div className="flex justify-between items-center">
                         <h2 className="text-lg font-semibold">My Projects</h2>
-                        <div className="flex flex-col sm:flex-row sm:gap-6">
-                            <div className="flex gap-1 items-center">
-                                <div className="h-2 w-2 rounded-full bg-green-500"></div>
-                                <p className="text-xs text-muted-foreground line-clamp-1">
-                                    Collaboration
-                                </p>
-                            </div>
-                            <div className="flex gap-1 items-center">
-                                <div className="h-2 w-2 rounded-full bg-cyan-500"></div>
-                                <p className="text-xs text-muted-foreground">
-                                    Feature Requests
-                                </p>
-                            </div>
-                            <div className="flex gap-1 items-center">
-                                <div className="h-2 w-2 rounded-full bg-red-500"></div>
-                                <p className="text-xs text-muted-foreground">
-                                    Archived
-                                </p>
-                            </div>
-                        </div>
+
                         <Link href="/projects">
                             <Button
                                 className="text-xs text-muted-foreground"
@@ -307,7 +270,7 @@ export default function Home() {
                             </Button>
                         </Link>
                     </div>
-
+                    <StatusBadge />
                     <div className="flex flex-wrap gap-4 justify-start">
                         {projects.map((project) => (
                             <ProjectCard key={project.id} project={project} />
