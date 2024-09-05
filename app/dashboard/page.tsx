@@ -12,8 +12,8 @@ export default function Dashboard() {
 
     return (
         <div className="flex flex-row">
-            <Sidebar active={active} setActive={setActive} />
-            <DashboardContent active={active} />
+            <Sidebar />
+            {/* <DashboardContent active={active} /> */}
         </div>
     );
 }

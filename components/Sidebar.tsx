@@ -1,55 +1,138 @@
 "use client";
-import { Merge } from "lucide-react";
-import React, { useState } from "react";
+import { ChevronLeft, ChevronRight } from "lucide-react";
+import React, { useEffect, useState } from "react";
+import { PERSONAL_MENU, PUBLIC_MENU, FOOTER_MENU } from "@/lib/constants";
+import MenuItem from "./MenuItem";
+import { cn } from "@/lib/utils";
+import { Button } from "./ui/button";
+import {
+    Tooltip,
+    TooltipContent,
+    TooltipProvider,
+    TooltipTrigger,
+} from "./ui/tooltip";
+import { Separator } from "./ui/separator";
 
-interface DashboardOptions {
-    active: "dashboard" | "projects" | "collaborators" | "profile";
-}
+const Sidebar = () => {
+    const [isSidebarExpanded, setIsSidebarExpanded] = useState(true);
+    //     if (typeof window !== "undefined") {
+    //         const saved = window.localStorage.getItem("sidebarExpanded");
+    //         return saved === null ? true : JSON.parse(saved);
+    //     }
+    //     return true; // default state if window is not defined
+    // });
 
-const Sidebar = ({active, setActive}: {active: DashboardOptions["active"], setActive: (active: DashboardOptions["active"]) => void}) => {
-    const [open, setOpen] = useState(false);
+    // useEffect(() => {
+    //     if (typeof window !== "undefined") {
+    //         window.localStorage.setItem(
+    //             "sidebarExpanded",
+    //             JSON.stringify(isSidebarExpanded)
+    //         );
+    //     }
+    // }, [isSidebarExpanded]);
 
-    return (
-        <div className="flex flex-col gap-4 items-center w-32">
-            <div className="flex flex-row items-center gap-2">
-                <Merge className="text-primary" size={20} strokeWidth={3} />
-                <h1 className="text-2xl font-bold">contribu.</h1>
+    const toggleSidebar = () => {
+        setIsSidebarExpanded(!isSidebarExpanded);
+    };
+
+    return isSidebarExpanded ? (
+        <aside className="w-1/2 z-50 fixed inset-x-0 h-screen bg-white border-r-[1px] sm:relative sm:w-1/3 md:w-1/4 lg:w-1/6">
+            <div className="flex flex-col gap-2 h-full justify-start mt-5 px-2">
+                <TooltipProvider>
+                    <Tooltip>
+                        <TooltipTrigger asChild>
+                            <ChevronLeft
+                                strokeWidth={2}
+                                onClick={toggleSidebar}
+                                className="w-4 h-4 sm:w-5 sm:h-5 mb-4 ml-4 cursor-pointer"
+                            />
+                        </TooltipTrigger>
+                        <TooltipContent side="right">
+                            <p>Close Sidebar</p>
+                        </TooltipContent>
+                    </Tooltip>
+                </TooltipProvider>
+
+                <div className="flex flex-col gap-3 px-2 mt-1 mb-2 overflow-y-auto">
+                    {PUBLIC_MENU.map((item, idx) => (
+                        <MenuItem
+                            key={idx}
+                            item={item}
+                            isSidebarExpanded={isSidebarExpanded}
+                        />
+                    ))}
+                </div>
+                <Separator orientation="horizontal" />
+                <div className="flex flex-col gap-3 mt-2 px-2 overflow-y-auto">
+                    {PERSONAL_MENU.map((item, idx) => (
+                        <MenuItem
+                            key={idx}
+                            item={item}
+                            isSidebarExpanded={isSidebarExpanded}
+                        />
+                    ))}
+                </div>
+                <Separator orientation="horizontal" />
+                <div className="fixed bottom-4 flex flex-col gap-3 mt-2 px-2 overflow-y-auto">
+                    {FOOTER_MENU.map((item, idx) => (
+                        <MenuItem
+                            key={idx}
+                            item={item}
+                            isSidebarExpanded={isSidebarExpanded}
+                        />
+                    ))}
+                </div>
             </div>
-            <nav className="flex flex-col gap-4">
-                <div
-                    className={`cursor-pointer ${
-                        active === "dashboard" ? "text-primary" : "text-muted-foreground"
-                    }`}
-                    onClick={() => setActive("dashboard")}
-                >
-                    Dashboard
+        </aside>
+    ) : (
+        <aside className="w-18 h-screen border-r-[1px]">
+            <div className="flex flex-col gap-2 h-full items-center justify-start mt-5 px-2">
+                <TooltipProvider>
+                    <Tooltip>
+                        <TooltipTrigger asChild>
+                            <ChevronRight
+                                strokeWidth={2}
+                                onClick={toggleSidebar}
+                                className="w-4 h-4 sm:w-5 sm:h-5 mb-4 cursor-pointer"
+                            />
+                        </TooltipTrigger>
+                        <TooltipContent side="right">
+                            <p>Open Sidebar</p>
+                        </TooltipContent>
+                    </Tooltip>
+                </TooltipProvider>
+
+                <div className="flex flex-col gap-3 px-2 md:px-6 mt-4 mb-4 overflow-y-auto ">
+                    {PUBLIC_MENU.map((item, idx) => (
+                        <MenuItem
+                            key={idx}
+                            item={item}
+                            isSidebarExpanded={isSidebarExpanded}
+                        />
+                    ))}
                 </div>
-                <div
-                    className={`cursor-pointer ${
-                        active === "projects" ? "text-primary" : "text-muted-foreground"
-                    }`}
-                    onClick={() => setActive("projects")}
-                >
-                    Projects
+                <Separator orientation="horizontal" />
+                <div className="flex flex-col mt-4 gap-3 md:px-6 overflow-y-auto">
+                    {PERSONAL_MENU.map((item, idx) => (
+                        <MenuItem
+                            key={idx}
+                            item={item}
+                            isSidebarExpanded={isSidebarExpanded}
+                        />
+                    ))}
                 </div>
-                <div
-                    className={`cursor-pointer ${
-                        active === "collaborators" ? "text-primary" : "text-muted-foreground"
-                    }`}
-                    onClick={() => setActive("collaborators")}
-                >
-                    Collaborators
+                <Separator orientation="horizontal" />
+                <div className="fixed bottom-4 flex flex-col gap-3 mt-4 px-2 overflow-y-auto">
+                    {FOOTER_MENU.map((item, idx) => (
+                        <MenuItem
+                            key={idx}
+                            item={item}
+                            isSidebarExpanded={isSidebarExpanded}
+                        />
+                    ))}
                 </div>
-                <div
-                    className={`cursor-pointer ${
-                        active === "profile" ? "text-primary" : "text-muted-foreground"
-                    }`}
-                    onClick={() => setActive("profile")}
-                >
-                    Profile
-                </div>
-            </nav>
-        </div>
+            </div>
+        </aside>
     );
 };
 
