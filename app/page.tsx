@@ -161,7 +161,7 @@ export default function Home() {
                                 className="relative shadow-md rounded-full"
                             >
                                 <p className="absolute -top-2 -right-2 text-xs font-semibold text-white bg-primary rounded-full w-5 h-5 flex items-center justify-center">
-                                    3
+                                    30
                                 </p>
                                 <Bell />
                             </Button>

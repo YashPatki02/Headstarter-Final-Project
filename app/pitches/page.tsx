@@ -1,9 +1,13 @@
-import React from 'react'
+import Profile from "@/components/Profile";
+import React from "react";
 
 const PitchesPage = () => {
-  return (
-    <div>PitchesPage</div>
-  )
-}
+    return (
+        // <div>PitchesPage</div>
+        <>
+            <Profile />
+        </>
+    );
+};
 
-export default PitchesPage
+export default PitchesPage;
