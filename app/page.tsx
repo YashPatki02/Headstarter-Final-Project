@@ -171,10 +171,10 @@ export default function Home() {
 
                 <div className="hidden sm:grid grid-cols-1 sm:grid-cols-3 gap-2 w-full">
                     <div className="flex flex-col gap-2 bg-background rounded-lg p-4 w-full">
-                        <h2 className="text-lg font-semibold">
+                        <h2 className="text-md md:text-lg font-semibold">
                             Active Projects
                         </h2>
-                        <h3 className="text-6xl text-center text-primary mt-4">
+                        <h3 className="text-5xl md:text-6xl text-center text-primary mt-4">
                             3
                         </h3>
                         <Link
@@ -191,10 +191,10 @@ export default function Home() {
                         </Link>
                     </div>
                     <div className="flex flex-col gap-2  bg-background rounded-lg p-4">
-                        <h2 className="text-lg font-semibold">
-                            Collaboration Requests
+                        <h2 className="text-md md:text-lg font-semibold">
+                            Collab Requests
                         </h2>
-                        <h3 className="text-6xl text-center text-primary mt-4">
+                        <h3 className="text-5xl md:text-6xl text-center text-primary mt-4">
                             7
                         </h3>
                         <Link
@@ -211,10 +211,10 @@ export default function Home() {
                         </Link>
                     </div>
                     <div className="flex flex-col gap-2 bg-background rounded-lg p-4">
-                        <h2 className="text-lg font-semibold">
+                        <h2 className="text-md md:text-lg font-semibold">
                             Feature Requests
                         </h2>
-                        <h3 className="text-6xl text-center text-primary mt-4">
+                        <h3 className="text-5xl md:text-6xl text-center text-primary mt-4">
                             23
                         </h3>
                         <Link
