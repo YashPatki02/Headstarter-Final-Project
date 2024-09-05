@@ -10,8 +10,13 @@ export default function Profile() {
     // console.log("current", current);
 
     return (
-        <div className="flex flex-col items-center justify-center py-2 mb-20">
-            <UserProfile />
+        <div className="flex flex-col gap-4 items-start mt-4">
+            <div className="flex flex-col justify-start items-start w-full mb-2">
+                <h1 className="text-2xl font-semibold">Profile</h1>
+                <div className="flex items-center mt-6 mb-12">
+                    <UserProfile />
+                </div>
+            </div>
         </div>
     );
 }
