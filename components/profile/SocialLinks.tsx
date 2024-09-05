@@ -1,28 +1,29 @@
 "use client";
 import React, { useEffect, useState } from "react";
-// !types
+// !types || will be changing to useState
 type User = {
   links: {
     github: string;
     linkedin: string;
     portfolio: string;
   };
-  interests: string[];
   // Add other properties here
 };
 
 type SocialLinksProps = {
   user: User;
-  onUpdateLinks: (newLink: string) => void;
+
 };
-function SocialLinks({ user, onUpdateLinks }: SocialLinksProps) {
+function SocialLinks({ user }: SocialLinksProps) {
   const [links, setLinks] = useState<User["links"]>({
     github: user.links?.github || "",
     linkedin: user.links?.linkedin || "",
     portfolio: user.links?.portfolio || "",
   });
-  // run when mounts
+  const [isEditing, setIsEditing] = useState(false);
+  // * if no links
   useEffect(() => {
+    // if no links
     if (
       user.links?.github == "" &&
       user.links?.linkedin == "" &&
@@ -33,9 +34,8 @@ function SocialLinks({ user, onUpdateLinks }: SocialLinksProps) {
     }
     console.log("user.links");
   }, []);
-  const [isEditing, setIsEditing] = useState(false);
 
-  const handleChange = (e) => {
+  const handleChange = (e: { target: { name: any; value: any; }; }) => {
     const { name, value } = e.target;
     setLinks((prevLinks) => ({
       ...prevLinks,
@@ -44,7 +44,38 @@ function SocialLinks({ user, onUpdateLinks }: SocialLinksProps) {
   };
 
   const handleSave = () => {
-    // onUpdateLinks(links); // funciton recieve string
+    console.log(links);
+    // ! do and api call here
+    /* try {
+      const response = await fetch(apiEndpoint, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          github: links.github,
+          linkedin: links.linkedin,
+          portfolio: links.portfolio,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Error saving links');
+      }
+
+      const data = await response.json();
+
+      // Update the state with the returned data or confirmation
+      // setLinks({
+      //   github: data.github || '',
+      //   linkedin: data.linkedin || '',
+      //   portfolio: data.portfolio || '',
+      // });
+
+      console.log('Links saved successfully!', data);
+    } catch (error) {
+      console.error('Failed to save links:', error);
+    } */
     setIsEditing(false); // Exit edit mode after saving
   };
 
@@ -53,6 +84,7 @@ function SocialLinks({ user, onUpdateLinks }: SocialLinksProps) {
   };
 
   const handleCancel = () => {
+    setLinks(user.links);
     setIsEditing(false); // Exit edit mode without saving
   };
 
@@ -75,6 +107,7 @@ function SocialLinks({ user, onUpdateLinks }: SocialLinksProps) {
       {isEditing ? (
         <div className="flex flex-col space-y-4 mt-4">
           {/* GitHub Link */}
+          {/* <form onSubmit={handleSubmit}> */}
           <div>
             <label className="block text-gray-700 font-medium mb-1">
               GitHub
@@ -134,36 +167,44 @@ function SocialLinks({ user, onUpdateLinks }: SocialLinksProps) {
               Cancel
             </button>
           </div>
+          {/* </form> */}
         </div>
       ) : (
         <div className="mt-4">
           {/* Display Links */}
           <p>
-            <strong>GitHub:</strong>{" "}
-            <a href={links.github} target="_blank" rel="noopener noreferrer">
+            <strong>GitHub: </strong>
+            <a
+              className="text-blue-500"
+              href={links.github}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
               {links.github}
             </a>
           </p>
           <p>
-            <strong>LinkedIn:</strong>{" "}
-            <a href={links.linkedin} target="_blank" rel="noopener noreferrer">
+            <strong>LinkedIn: </strong>
+            <a
+              className="text-blue-500"
+              href={links.linkedin}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
               {links.linkedin}
             </a>
           </p>
           <p>
-            <strong>Personal Portfolio:</strong>{" "}
-            <a href={links.portfolio} target="_blank" rel="noopener noreferrer">
+            <strong>Personal Portfolio: </strong>
+            <a
+              className="text-blue-500"
+              href={links.portfolio}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
               {links.portfolio}
             </a>
           </p>
-
-          {/* Edit Button
-          <button
-            onClick={handleEdit}
-            className="mt-4 bg-blue-500 text-white px-4 py-2 rounded-lg"
-          >
-            Edit
-          </button> */}
         </div>
       )}
     </div>

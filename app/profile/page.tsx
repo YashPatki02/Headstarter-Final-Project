@@ -48,6 +48,7 @@ function ProfilePage(/* { user } */) {
       portfolio: "https://google.com",
     },
   };
+  //
   const handleUpdateSkills = (newSkill: String)=> {
     // Logic to update user's skills
     console.log("new skill");
@@ -55,13 +56,10 @@ function ProfilePage(/* { user } */) {
     // add it to the use state
     //! Make an api call
   }
-  function handleUpdateLinks(updatedLinks: String) {
-    console.log("Updated Links:", updatedLinks);
-  }
   return (
     <div className="max-w-4xl mx-auto py-8">
       <ProfileOverview user={user} />
-      <SocialLinks user={user} onUpdateLinks={handleUpdateLinks} />
+      <SocialLinks user={user}  />
       <SkillsAndInterests user={user} onUpdateSkills={handleUpdateSkills} />
       <Projects user={user} />
     </div>

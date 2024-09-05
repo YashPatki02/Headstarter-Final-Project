@@ -25,15 +25,7 @@ export default function SkillsAndInterests({
 
   useEffect(() => {
     const fetchUserData = () => {
-      // ! api request here
-      /* try {
-      const response = await fetch()
-      setUser(response.data);
-      } catch (error) {
-        setError("Failed to load user data");
-      } finally {
-        setLoading(false);
-      } */
+      // storng the data inStates
       setUserData(user);
       console.log(user);
       console.log("skill Intrest mounted");
