@@ -6,8 +6,8 @@ const PitchesPage = () => {
     return (
         // <div>PitchesPage</div>
         <>
-            {/* <Profile /> */}
-            <ProfileEdit />
+            <Profile />
+            {/* <ProfileEdit /> */}
         </>
     );
 };

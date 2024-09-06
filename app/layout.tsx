@@ -1,11 +1,8 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Inter, Poppins } from "next/font/google";
 import "./globals.css";
-import { Poppins } from "next/font/google";
 import { ClerkProvider, SignedIn, SignedOut } from "@clerk/nextjs";
 import Header from "@/components/Header";
-import Hero from "@/components/Hero";
-import Features from "@/components/Features";
 import Footer from "@/components/Footer";
 import DashboardHeader from "@/components/DashboardHeader";
 import Sidebar from "@/components/Sidebar";
@@ -31,12 +28,12 @@ export default function RootLayout({
                 <body className={`${poppins.className}`}>
                     <SignedOut>
                         <Header />
-                        <Hero />
-                        <Features />
+                        {children}
                         <Footer />
                     </SignedOut>
-                    <SidebarProvider>
-                        <SignedIn>
+
+                    <SignedIn>
+                        <SidebarProvider>
                             <div className="flex justify-start items-start overflow-y-hidden">
                                 <Sidebar />
                                 <div className="flex-1">
@@ -56,8 +53,8 @@ export default function RootLayout({
                                     </main>
                                 </div>
                             </div>
-                        </SignedIn>
-                    </SidebarProvider>
+                        </SidebarProvider>
+                    </SignedIn>
                 </body>
             </html>
         </ClerkProvider>

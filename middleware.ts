@@ -1,6 +1,16 @@
-import { clerkMiddleware } from "@clerk/nextjs/server";
+import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
 
 export default clerkMiddleware();
+
+
+// // Create a route matcher to exclude public routes like '/', '/sign-in', and '/sign-up'
+// const isProtectedRoute = createRouteMatcher(["/(?!sign-in|sign-up|$).*"]);
+
+// export default clerkMiddleware((auth, req) => {
+//     if (isProtectedRoute(req)) {
+//         auth().protect();
+//     }
+// });
 
 export const config = {
     matcher: [
@@ -10,3 +20,4 @@ export const config = {
         "/(api|trpc)(.*)",
     ],
 };
+
