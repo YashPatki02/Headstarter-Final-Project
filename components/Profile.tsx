@@ -3,6 +3,16 @@ import React, { useState } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import {
+    Sheet,
+    SheetContent,
+    SheetDescription,
+    SheetHeader,
+    SheetTitle,
+    SheetTrigger,
+    SheetFooter,
+    SheetClose,
+} from "@/components/ui/sheet";
+import {
     CircleUser,
     Github,
     Copy,
@@ -11,6 +21,8 @@ import {
     UserPen,
     ChevronDown,
     ChevronUp,
+    Edit,
+    Edit2,
 } from "lucide-react";
 import { useUser } from "@clerk/clerk-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -19,6 +31,9 @@ import ProjectCard from "./ProjectCard";
 import StatusBadge from "./StatusBadge";
 import { ScrollArea, ScrollBar } from "./ui/scroll-area";
 import { Input } from "./ui/input";
+import { Label } from "./ui/label";
+import ProfileProjectsCard from "./ProfileProjectsCard";
+import { Textarea } from "./ui/textarea";
 
 const Profile = () => {
     const [tab, setTab] = useState("about");
@@ -139,6 +154,28 @@ const Profile = () => {
         },
     ];
 
+    const [User, setUser] = useState({
+        imageUrl: "https://randomuser",
+        firstName: "Jane",
+        lastName: "Doe",
+        username: "janedoe",
+        bio: "Passionate web developer with a focus on front-end technologies. I love creating interactive and user-friendly web applications.",
+        linkedin: "janedoe-linkedin",
+        github: "janedoe-github",
+        portfolio: "janedoe-portfolio.com",
+        skills: ["React", "Node", "GraphQL", "Next.js"],
+        interests: [
+            "Web Development",
+            "Open Source",
+            "AI & ML",
+            "UI/UX Design",
+        ],
+    });
+
+    const handleInputChange = (key: string, value: string) => {
+        setUser({ ...User, [key]: value });
+    };
+
     type ProjectTabTypes = "active" | "collaborations" | "archived";
 
     const [tabCollapsed, setTabCollapsed] = useState({
@@ -204,8 +241,8 @@ const Profile = () => {
             </div>
 
             {tab === "about" && (
-                <div className="relative flex flex-col gap-2 w-full mb-20">
-                    <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center bg-background rounded-lg p-4">
+                <div className="flex flex-col gap-2 w-full mb-20">
+                    <div className="relative flex flex-col sm:flex-row justify-between items-start sm:items-center bg-background rounded-lg p-4">
                         <div className="flex gap-4 items-center">
                             <Avatar className="w-20 h-20">
                                 <AvatarImage src={user?.imageUrl} />
@@ -222,7 +259,7 @@ const Profile = () => {
                                 </p>
                             </div>
                         </div>
-                        <div className="flex flex-col gap-1 mt-8 sm:mt-0 items-start mr-8 md:mr-16">
+                        <div className="flex flex-col gap-1 mt-8 sm:mt-0 items-start mr-8 md:mr-32">
                             <div className="flex gap-2 items-center w-full">
                                 <Linkedin className="w-4 h-4" />
                                 <div className="flex justify-between items-center w-full">
@@ -287,21 +324,170 @@ const Profile = () => {
                                 </div>
                             </div>
                         </div>
-                        <Link
-                            href="/projects"
-                            className="self-start absolute -top-4 -right-2"
-                        >
-                            <Button
-                                className="rounded-full "
-                                // variant="ghost"
-                                size="icon"
-                            >
-                                <UserPen className="w-4 h-4 ml-1" />
-                            </Button>
-                        </Link>
+
+                        <Sheet>
+                            <SheetTrigger asChild>
+                                <Button
+                                    className="rounded-full self-start absolute top-3 right-3"
+                                    variant="secondary"
+                                    size="icon"
+                                >
+                                    <Edit2 className="w-4 h-4" />
+                                </Button>
+                            </SheetTrigger>
+                            <SheetContent>
+                                <SheetHeader>
+                                    <SheetTitle className="text-md">
+                                        Edit Profile
+                                    </SheetTitle>
+                                    <SheetDescription className="text-xs text-muted-foreground">
+                                        Make changes to your profile here. Click
+                                        save when you're done.
+                                    </SheetDescription>
+                                </SheetHeader>
+
+                                <div className="flex flex-col gap-4 py-4">
+                                    {/* First Name */}
+                                    <div className="flex flex-col gap-2">
+                                        <Label
+                                            htmlFor="name"
+                                            className="text-xs"
+                                        >
+                                            Name
+                                        </Label>
+                                        <div className="flex gap-2">
+                                            <Input
+                                                id="firstName"
+                                                value={User.firstName}
+                                                placeholder="First Name"
+                                                className="text-xs"
+                                                onChange={(e) =>
+                                                    handleInputChange(
+                                                        "firstName",
+                                                        e.target.value
+                                                    )
+                                                }
+                                            />
+                                            <Input
+                                                id="lastName"
+                                                value={User.lastName}
+                                                placeholder="Last Name"
+                                                className="text-xs"
+                                                onChange={(e) =>
+                                                    handleInputChange(
+                                                        "lastName",
+                                                        e.target.value
+                                                    )
+                                                }
+                                            />
+                                        </div>
+                                    </div>
+
+                                    {/* Username */}
+                                    <div className="flex flex-col gap-2">
+                                        <Label
+                                            htmlFor="username"
+                                            className="text-xs"
+                                        >
+                                            Username
+                                        </Label>
+                                        <Input
+                                            id="username"
+                                            value={User.username}
+                                            placeholder="Username"
+                                            className="text-xs"
+                                            onChange={(e) =>
+                                                handleInputChange(
+                                                    "username",
+                                                    e.target.value
+                                                )
+                                            }
+                                        />
+                                    </div>
+
+                                    {/* LinkedIn */}
+                                    <div className="flex flex-col gap-2">
+                                        <Label
+                                            htmlFor="socials"
+                                            className="text-xs"
+                                        >
+                                            Socials
+                                        </Label>
+                                        <div className="flex">
+                                            <div className="flex items-center justify-center p-2 border-[1px] border-r-0 rounded-l-md bg-gray-200">
+                                                <p className="text-xs">
+                                                    linkedin.com/in/
+                                                </p>
+                                            </div>
+                                            <Input
+                                                id="linkedin"
+                                                value={User.linkedin}
+                                                className="rounded-l-none text-xs"
+                                                placeholder="LinkedIn"
+                                                onChange={(e) =>
+                                                    handleInputChange(
+                                                        "linkedin",
+                                                        e.target.value
+                                                    )
+                                                }
+                                            />
+                                        </div>
+
+                                        <div className="flex">
+                                            <div className="flex items-center justify-center p-2 border-[1px] border-r-0 rounded-l-md bg-gray-200">
+                                                <p className="text-xs">
+                                                    github.com/
+                                                </p>
+                                            </div>
+                                            <Input
+                                                id="github"
+                                                value={User.github}
+                                                className="rounded-l-none text-xs"
+                                                placeholder="GitHub"
+                                                onChange={(e) =>
+                                                    handleInputChange(
+                                                        "github",
+                                                        e.target.value
+                                                    )
+                                                }
+                                            />
+                                        </div>
+
+                                        <div className="flex">
+                                            <div className="flex items-center justify-center p-2 border-[1px] border-r-0 rounded-l-md bg-gray-200">
+                                                <p className="text-xs">
+                                                    https://
+                                                </p>
+                                            </div>
+                                            <Input
+                                                id="portfolio"
+                                                value={User.portfolio}
+                                                className="rounded-l-none text-xs"
+                                                placeholder="Portfolio"
+                                                onChange={(e) =>
+                                                    handleInputChange(
+                                                        "portfolio",
+                                                        e.target.value
+                                                    )
+                                                }
+                                            />
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {/* Footer Buttons */}
+                                <SheetFooter className="flex gap-2">
+                                    <SheetClose asChild>
+                                        <Button type="submit">
+                                            save changes
+                                        </Button>
+                                    </SheetClose>
+                                </SheetFooter>
+                            </SheetContent>
+                        </Sheet>
                     </div>
 
-                    <div className="flex flex-col md:flex-row justify-between md:gap-20 items-start bg-background rounded-lg p-4">
+                    <div className="relative flex flex-col md:flex-row justify-between md:gap-32 items-start bg-background rounded-lg p-4">
                         <div className="flex flex-col gap-2 md:w-1/2">
                             <h2 className="text-sm">Bio</h2>
                             <p className="text-xs mb-2">
@@ -383,6 +569,108 @@ const Profile = () => {
                                 <p className="text-xs">3</p>
                             </div>
                         </div>
+                        <Sheet>
+                            <SheetTrigger asChild>
+                                <Button
+                                    className="rounded-full self-start absolute top-3 right-3"
+                                    variant="secondary"
+                                    size="icon"
+                                >
+                                    <Edit2 className="w-4 h-4" />
+                                </Button>
+                            </SheetTrigger>
+                            <SheetContent>
+                                <SheetHeader>
+                                    <SheetTitle className="text-md">
+                                        Edit Profile
+                                    </SheetTitle>
+                                    <SheetDescription className="text-xs text-muted-foreground">
+                                        Make changes to your profile here. Click
+                                        save when you're done.
+                                    </SheetDescription>
+                                </SheetHeader>
+
+                                <div className="flex flex-col gap-4 py-4">
+                                    {/* First Name */}
+                                    <div className="flex flex-col gap-2">
+                                        <Label
+                                            htmlFor="name"
+                                            className="text-xs"
+                                        >
+                                            Bio
+                                        </Label>
+                                        <div className="flex gap-2">
+                                            <Textarea
+                                                id="bio"
+                                                value={User.bio}
+                                                maxLength={150}
+                                                placeholder="Enter a short bio"
+                                                className="text-xs"
+                                                onChange={(e) =>
+                                                    handleInputChange(
+                                                        "bio",
+                                                        e.target.value
+                                                    )
+                                                }
+                                            />
+                                        </div>
+                                    </div>
+
+                                    {/* Username */}
+                                    <div className="flex flex-col gap-2">
+                                        <Label
+                                            htmlFor="skills"
+                                            className="text-xs"
+                                        >
+                                            Top Skills
+                                        </Label>
+                                        <Input
+                                            id="skills"
+                                            value={User.skills}
+                                            placeholder="Skills"
+                                            className="text-xs"
+                                            onChange={(e) =>
+                                                handleInputChange(
+                                                    "skills",
+                                                    e.target.value
+                                                )
+                                            }
+                                        />
+                                    </div>
+
+                                    {/* LinkedIn */}
+                                    <div className="flex flex-col gap-2">
+                                        <Label
+                                            htmlFor="interests"
+                                            className="text-xs"
+                                        >
+                                            Interests
+                                        </Label>
+                                        <Input
+                                            id="interests"
+                                            value={User.interests}
+                                            placeholder="Interests"
+                                            className="text-xs"
+                                            onChange={(e) =>
+                                                handleInputChange(
+                                                    "interests",
+                                                    e.target.value
+                                                )
+                                            }
+                                        />
+                                    </div>
+                                </div>
+
+                                {/* Footer Buttons */}
+                                <SheetFooter className="flex gap-2">
+                                    <SheetClose asChild>
+                                        <Button type="submit">
+                                            save changes
+                                        </Button>
+                                    </SheetClose>
+                                </SheetFooter>
+                            </SheetContent>
+                        </Sheet>
                     </div>
                 </div>
             )}
@@ -403,105 +691,29 @@ const Profile = () => {
                         <Button className="text-sm">Create</Button>
                     </div>
 
-                    <div className="flex flex-col gap-2 bg-background rounded-lg p-4">
-                        <div
-                            className="flex justify-between items-center cursor-pointer"
-                            onClick={() => toggleTabCollapse("active")}
-                        >
-                            <h2 className="text-lg font-semibold">
-                                Your Active Projects
-                            </h2>
+                    <ProfileProjectsCard
+                        tab="active"
+                        title="Your Active Projects"
+                        tabCollapsed={tabCollapsed.active}
+                        toggleTabCollapse={toggleTabCollapse}
+                        projects={projects}
+                    />
 
-                            {tabCollapsed.active ? (
-                                <ChevronUp className="w-4 h-4  mr-8" />
-                            ) : (
-                                <ChevronDown className="w-4 h-4  mr-8" />
-                            )}
-                        </div>
-                        {tabCollapsed.active && (
-                            <>
-                                <StatusBadge />
-                                {/* <ScrollArea className="max-w-[250px] 460px:max-w-[380px] 540px:max-w-[480px] sm:max-w-lg md:max-w-[36rem] 900px:max-w-[44rem] lg:max-w-[50rem] xl:max-w-[68rem] 2xl:max-w-[85rem]"> */}
+                    <ProfileProjectsCard
+                        tab="collaborations"
+                        title="Your Active Collaborations"
+                        tabCollapsed={tabCollapsed.collaborations}
+                        toggleTabCollapse={toggleTabCollapse}
+                        projects={projects}
+                    />
 
-                                <div className="flex gap-2 justify-start flex-wrap pb-4">
-                                    {projects.map((project) => (
-                                        <ProjectCard
-                                            key={project.id}
-                                            project={project}
-                                        />
-                                    ))}
-                                </div>
-                            </>
-                        )}
-                        {/* <ScrollBar orientation="horizontal" /> */}
-                        {/* </ScrollArea> */}
-                    </div>
-
-                    <div className="flex flex-col gap-2 w-full bg-background rounded-lg p-4">
-                        <div
-                            className="flex justify-between items-center cursor-pointer"
-                            onClick={() => toggleTabCollapse("collaborations")}
-                        >
-                            <h2 className="text-lg font-semibold">
-                                Your Active Collaborations
-                            </h2>
-                            {tabCollapsed.collaborations ? (
-                                <ChevronUp className="w-4 h-4 mr-8" />
-                            ) : (
-                                <ChevronDown className="w-4 h-4  mr-8" />
-                            )}
-                        </div>
-                        {tabCollapsed.collaborations && (
-                            <>
-                                <StatusBadge />
-                                {/* <ScrollArea className="max-w-[250px] 460px:max-w-[380px] 540px:max-w-[480px] sm:max-w-lg md:max-w-[36rem] 900px:max-w-[44rem] lg:max-w-[50rem] xl:max-w-[68rem] 2xl:max-w-[85rem]"> */}
-
-                                <div className="flex gap-2 justify-start flex-wrap pb-4">
-                                    {projects.map((project) => (
-                                        <ProjectCard
-                                            key={project.id}
-                                            project={project}
-                                        />
-                                    ))}
-                                </div>
-                            </>
-                        )}
-                        {/* <ScrollBar orientation="horizontal" />
-                        </ScrollArea> */}
-                    </div>
-
-                    <div className="flex flex-col gap-2 bg-background rounded-lg p-4 w-full">
-                        <div
-                            className="flex justify-between items-center cursor-pointer"
-                            onClick={() => toggleTabCollapse("archived")}
-                        >
-                            <h2 className="text-lg font-semibold">
-                                Your Archived Projects
-                            </h2>
-                            {tabCollapsed.archived ? (
-                                <ChevronUp className="w-4 h-4  mr-8" />
-                            ) : (
-                                <ChevronDown className="w-4 h-4 mr-8" />
-                            )}
-                        </div>
-                        {tabCollapsed.archived && (
-                            <>
-                                <StatusBadge />
-                                {/* <ScrollArea className="max-w-[250px] 460px:max-w-[380px] 540px:max-w-[480px] sm:max-w-lg md:max-w-[36rem] 900px:max-w-[44rem] lg:max-w-[50rem] xl:max-w-[68rem] 2xl:max-w-[85rem]"> */}
-
-                                <div className="flex gap-2 justify-start flex-wrap pb-4">
-                                    {projects.map((project) => (
-                                        <ProjectCard
-                                            key={project.id}
-                                            project={project}
-                                        />
-                                    ))}
-                                </div>
-                            </>
-                        )}
-                        {/* <ScrollBar orientation="horizontal" /> */}
-                        {/* </ScrollArea> */}
-                    </div>
+                    <ProfileProjectsCard
+                        tab="archived"
+                        title="Your Archived Projects"
+                        tabCollapsed={tabCollapsed.archived}
+                        toggleTabCollapse={toggleTabCollapse}
+                        projects={projects}
+                    />
                 </div>
             )}
         </div>
