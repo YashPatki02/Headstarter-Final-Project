@@ -11,13 +11,18 @@ const config = {
     prefix: "",
     theme: {
         container: {
-            center: "true",
+            center: true,
             padding: "2rem",
             screens: {
                 "2xl": "1400px",
             },
         },
         extend: {
+            screens: {
+                "460px": "460px",
+                "540px": "540px",
+                "900px": "900px",
+            },
             colors: {
                 border: "hsl(var(--border))",
                 input: "hsl(var(--input))",
