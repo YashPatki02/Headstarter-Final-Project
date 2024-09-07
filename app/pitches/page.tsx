@@ -6,6 +6,7 @@ const PitchesPage = () => {
         // <div>PitchesPage</div>
         <>
             <Profile />
+            {/* <ProfileEdit /> */}
         </>
     );
 };
