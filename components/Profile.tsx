@@ -18,11 +18,8 @@ import {
     Copy,
     Check,
     Linkedin,
-    UserPen,
-    ChevronDown,
-    ChevronUp,
-    Edit,
     Edit2,
+    Eye,
 } from "lucide-react";
 import { useUser } from "@clerk/clerk-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -173,6 +170,7 @@ const Profile = () => {
         firstName: "Jane",
         lastName: "Doe",
         username: "janedoe",
+        password: "password",
         bio: "Passionate web developer with a focus on front-end technologies. I love creating interactive and user-friendly web applications.",
         linkedin: "janedoe-linkedin",
         github: "janedoe-github",
@@ -206,6 +204,13 @@ const Profile = () => {
 
     const handleSave = () => {
         setUserProfile({ ...updatedProfile });
+        setShowPassword(false);
+    };
+
+    const [showPassword, setShowPassword] = useState(false);
+
+    const togglePasswordVisibility = () => {
+        setShowPassword((prev) => !prev);
     };
 
     return (
@@ -349,11 +354,12 @@ const Profile = () => {
                             <SheetTrigger asChild>
                                 <Button
                                     className="rounded-full self-start absolute top-3 right-3"
-                                    variant="secondary"
+                                    variant="outline"
                                     size="icon"
-                                    onClick={() =>
-                                        setUpdatedProfile({ ...userProfile })
-                                    }
+                                    onClick={() => {
+                                        setShowPassword(false);
+                                        setUpdatedProfile({ ...userProfile });
+                                    }}
                                 >
                                     <Edit2 className="w-4 h-4" />
                                 </Button>
@@ -364,14 +370,13 @@ const Profile = () => {
                                         Edit Profile
                                     </SheetTitle>
                                     <SheetDescription className="text-xs text-muted-foreground">
-                                        Make changes to your profile here. Click
-                                        save when you're done.
+                                        Make changes and save when you're done.
                                     </SheetDescription>
                                 </SheetHeader>
 
                                 <div className="flex flex-col gap-4 py-4">
                                     {/* First Name */}
-                                    <div className="flex flex-col gap-2">
+                                    <div className="flex flex-col gap-1">
                                         <Label
                                             htmlFor="name"
                                             className="text-xs"
@@ -407,7 +412,7 @@ const Profile = () => {
                                     </div>
 
                                     {/* Username */}
-                                    <div className="flex flex-col gap-2">
+                                    <div className="flex flex-col gap-1">
                                         <Label
                                             htmlFor="username"
                                             className="text-xs"
@@ -428,8 +433,48 @@ const Profile = () => {
                                         />
                                     </div>
 
+                                    {/* Password */}
+                                    <div className="flex flex-col gap-1">
+                                        <Label
+                                            htmlFor="password"
+                                            className="text-xs"
+                                        >
+                                            Password
+                                        </Label>
+                                        <div className="relative">
+                                            {/* Step 2: Conditionally change the type of input based on visibility */}
+                                            <Input
+                                                id="password"
+                                                value={updatedProfile.password}
+                                                placeholder="Password"
+                                                type={
+                                                    showPassword
+                                                        ? "text"
+                                                        : "password"
+                                                } // Toggle between "text" and "password"
+                                                className="text-xs relative"
+                                                onChange={(e) =>
+                                                    handleInputChange(
+                                                        "password",
+                                                        e.target.value
+                                                    )
+                                                }
+                                            />
+                                            {/* Step 3: Add a button or icon to toggle visibility */}
+                                            <button
+                                                type="button"
+                                                onClick={
+                                                    togglePasswordVisibility
+                                                }
+                                                className="absolute text-muted-foreground right-4 top-1/2 transform -translate-y-1/2 text-xs"
+                                            >
+                                                {showPassword ? "Hide" : "Show"}
+                                            </button>
+                                        </div>
+                                    </div>
+
                                     {/* LinkedIn */}
-                                    <div className="flex flex-col gap-2">
+                                    <div className="flex flex-col gap-1">
                                         <Label
                                             htmlFor="socials"
                                             className="text-xs"
@@ -566,7 +611,7 @@ const Profile = () => {
                             <SheetTrigger asChild>
                                 <Button
                                     className="rounded-full self-start absolute top-3 right-3"
-                                    variant="secondary"
+                                    variant="outline"
                                     size="icon"
                                     onClick={() =>
                                         setUpdatedProfile({ ...userProfile })
@@ -685,7 +730,7 @@ const Profile = () => {
                             />
                             <Button
                                 className="text-sm border-[1px] rounded-l-none border-primary"
-                                variant="ghost"
+                                variant="outline"
                             >
                                 Search
                             </Button>

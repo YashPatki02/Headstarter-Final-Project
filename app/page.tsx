@@ -13,7 +13,7 @@ export default function Home() {
     const { getToken } = useAuth();
     const { user } = useUser();
 
-    console.log(user);
+    console.log(user?.id);
 
     useEffect(() => {
         const checkUserInSupabase = async () => {

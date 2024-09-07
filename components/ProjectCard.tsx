@@ -17,10 +17,26 @@ export default function ProjectCard({
     project,
 }: Readonly<{ project: ProjectType }>) {
     const avatarUrls = [
-        "https://avatars.githubusercontent.com/u/16860528",
-        "https://avatars.githubusercontent.com/u/20110627",
-        "https://avatars.githubusercontent.com/u/106103625",
-        "https://avatars.githubusercontent.com/u/59228569",
+        {
+            username: "user1",
+            url: "https://avatars.githubusercontent.com/u/16860528",
+            profileLink: "https://avatars.githubusercontent.com/u/16860528",
+        },
+        {
+            username: "user1",
+            url: "https://avatars.githubusercontent.com/u/20110627",
+            profileLink: "https://avatars.githubusercontent.com/u/20110627",
+        },
+        {
+            username: "user1",
+            url: "https://avatars.githubusercontent.com/u/106103625",
+            profileLink: "https://avatars.githubusercontent.com/u/106103625",
+        },
+        {
+            username: "user1",
+            url: "https://avatars.githubusercontent.com/u/59228569",
+            profileLink: "https://avatars.githubusercontent.com/u/59228569",
+        },
     ];
 
     const [isMounted, setIsMounted] = useState(false);

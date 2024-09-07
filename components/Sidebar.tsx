@@ -28,7 +28,7 @@ const Sidebar = () => {
     const { isSidebarExpanded, toggleSidebar } = useSidebar();
 
     return isSidebarExpanded ? (
-        <aside className="w-1/2 z-50 fixed inset-x-0 h-screen bg-white border-r-[1px] sm:relative sm:w-1/3 md:w-1/4 lg:w-1/6">
+        <aside className="w-1/2 z-40 fixed inset-x-0 h-screen bg-white border-r-[1px] sm:relative sm:w-1/3 md:w-1/4 lg:w-1/6">
             <div className="flex flex-col gap-2 h-full justify-start mt-5 px-2">
                 <TooltipProvider>
                     <Tooltip>
