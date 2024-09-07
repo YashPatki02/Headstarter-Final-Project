@@ -265,7 +265,7 @@ const Profile = () => {
                                 <AvatarImage src={userProfile?.imageUrl} />
                                 <AvatarFallback>
                                     {userProfile?.firstName?.[0] ?? "U"}
-                                    {userProfile?.lastName?.[0] ?? "U"}
+                                    {userProfile?.lastName?.[0] ?? "N"}
                                 </AvatarFallback>
                             </Avatar>
 
@@ -722,11 +722,26 @@ const Profile = () => {
             {tab === "pitches" && (
                 <div className="flex flex-col gap-2 w-full mb-20">
                     <div className="flex items-center justify-center h-[50vh] bg-background rounded-lg p-4">
-                        <div className="flex flex-col gap-2 items-center bg-primary p-6 rounded-md">
-                            <h1 className="text-3xl text-background">
-                                Pitches Coming Soon
+                        <div className="flex flex-col gap-2 items-center  p-6 rounded-md">
+                            <h1 className="text-3xl text-primary">
+                                pitches coming soon!
                             </h1>
-                            <p className="text-lg text-muted">
+                            <p className="text-lg text-muted-foreground">
+                                Stay tuned for updates!
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {tab === "blogs" && (
+                <div className="flex flex-col gap-2 w-full mb-20">
+                    <div className="flex items-center justify-center h-[50vh] bg-background rounded-lg p-4">
+                        <div className="flex flex-col gap-2 items-center p-6 rounded-md">
+                            <h1 className="text-3xl text-primary">
+                                blogs coming soon!
+                            </h1>
+                            <p className="text-lg text-muted-foreground">
                                 Stay tuned for updates!
                             </p>
                         </div>
