@@ -25,11 +25,6 @@ export default function Home() {
                         "Content-Type": "application/json",
                     },
                     body: JSON.stringify({
-                        userId: user?.id,
-                        firstName: user?.firstName,
-                        lastName: user?.lastName,
-                        emailAddress: user?.primaryEmailAddress?.emailAddress,
-                        username: user?.username,
                         imageUrl: user?.imageUrl,
                         token,
                     }),
@@ -43,7 +38,7 @@ export default function Home() {
         };
 
         if (user) {
-            // checkUserInSupabase();
+            checkUserInSupabase();
         }
     }, [user]);
 
