@@ -24,9 +24,7 @@ import {
 import { useUser } from "@clerk/clerk-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "./ui/badge";
-import ProjectCard from "./ProjectCard";
-import StatusBadge from "./StatusBadge";
-import { ScrollArea, ScrollBar } from "./ui/scroll-area";
+import { Tags } from "./ui/tags";
 import { Input } from "./ui/input";
 import { Label } from "./ui/label";
 import ProfileProjectsCard from "./ProfileProjectsCard";
@@ -188,17 +186,21 @@ const Profile = () => {
 
     const handleInputChange = (field: string, value: string) => {
         setUpdatedProfile((prevUser) => {
-            if (field === "skills" || field === "interests") {
-                return {
-                    ...prevUser,
-                    [field]: [prevUser[field], value],
-                };
-            } else {
+            
                 return {
                     ...prevUser,
                     [field]: value,
                 };
-            }
+            
+        });
+    };
+
+    const handleTagsChange = (field: string, tags: string[]) => {
+        setUpdatedProfile((prevUser) => {
+            return {
+                ...prevUser,
+                [field]: tags,
+            };
         });
     };
 
@@ -665,21 +667,21 @@ const Profile = () => {
                                         >
                                             Top Skills
                                         </Label>
-                                        <Input
+                                        <Tags
                                             id="skills"
-                                            value={updatedProfile.skills}
-                                            placeholder="Skills"
-                                            className="text-xs"
-                                            onChange={(e) =>
-                                                handleInputChange(
+                                            tags={updatedProfile.skills}
+                                            maxTags={5}
+                                            onTagsChange={(tags) =>
+                                                handleTagsChange(
                                                     "skills",
-                                                    e.target.value
+                                                    tags
                                                 )
                                             }
+                                            className="text-xs"
+                                            placeholder="Add skills"
                                         />
                                     </div>
 
-                                    {/* LinkedIn */}
                                     <div className="flex flex-col gap-2">
                                         <Label
                                             htmlFor="interests"
@@ -687,17 +689,19 @@ const Profile = () => {
                                         >
                                             Interests
                                         </Label>
-                                        <Input
+
+                                        <Tags
                                             id="interests"
-                                            value={updatedProfile.interests}
-                                            placeholder="Interests"
-                                            className="text-xs"
-                                            onChange={(e) =>
-                                                handleInputChange(
+                                            tags={updatedProfile.interests}
+                                            maxTags={5}
+                                            onTagsChange={(tags) =>
+                                                handleTagsChange(
                                                     "interests",
-                                                    e.target.value
+                                                    tags
                                                 )
                                             }
+                                            className="text-xs"
+                                            placeholder="Add interests"
                                         />
                                     </div>
                                 </div>
