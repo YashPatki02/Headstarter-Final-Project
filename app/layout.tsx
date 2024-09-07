@@ -26,7 +26,7 @@ export default function RootLayout({
         <ClerkProvider>
             <html lang="en">
                 <body className={`${poppins.className}`}>
-                    {/* <SignedOut>
+                    <SignedOut>
                         <Header />
                         {children}
                         <Footer />
