@@ -1,18 +1,31 @@
 import { NextRequest, NextResponse } from "next/server";
 import { supabaseClient } from "@/lib/supabaseClient";
+import jwt from "jsonwebtoken";
+
+const JWT_SECRET = process.env.JWT_SECRET || "";
 
 // Handler for POST requests
 export async function POST(req: NextRequest) {
-    const { userId, firstName, lastName, emailAddress, username, imageUrl, token } =
-        await req.json();
+    const {
+        imageUrl,
+        token,
+    } = await req.json();
 
-    if (!userId) {
+    if (!token) {
         return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
     }
 
     try {
         // Initialize Supabase client
         const supabase = supabaseClient(token);
+        const decodedToken = jwt.verify(token, JWT_SECRET) as any;
+
+        // Extract user details from the token  
+        const userId = decodedToken.sub;
+        const firstName = decodedToken.user_metadata.first_name;
+        const lastName = decodedToken.user_metadata.last_name;
+        const emailAddress = decodedToken.email;
+        const username = decodedToken.user_metadata.username;
 
         // Check if the user already exists in the Supabase table
         const { data: existingUser, error: selectError } = await supabase

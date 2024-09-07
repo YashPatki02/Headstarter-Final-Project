@@ -17,10 +17,26 @@ export default function ProjectCard({
     project,
 }: Readonly<{ project: ProjectType }>) {
     const avatarUrls = [
-        "https://avatars.githubusercontent.com/u/16860528",
-        "https://avatars.githubusercontent.com/u/20110627",
-        "https://avatars.githubusercontent.com/u/106103625",
-        "https://avatars.githubusercontent.com/u/59228569",
+        {
+            username: "user1",
+            url: "https://avatars.githubusercontent.com/u/16860528",
+            profileLink: "https://avatars.githubusercontent.com/u/16860528",
+        },
+        {
+            username: "user1",
+            url: "https://avatars.githubusercontent.com/u/20110627",
+            profileLink: "https://avatars.githubusercontent.com/u/20110627",
+        },
+        {
+            username: "user1",
+            url: "https://avatars.githubusercontent.com/u/106103625",
+            profileLink: "https://avatars.githubusercontent.com/u/106103625",
+        },
+        {
+            username: "user1",
+            url: "https://avatars.githubusercontent.com/u/59228569",
+            profileLink: "https://avatars.githubusercontent.com/u/59228569",
+        },
     ];
 
     const [isMounted, setIsMounted] = useState(false);
@@ -31,10 +47,10 @@ export default function ProjectCard({
 
     return (
         <Link href={`/projects/${project.id}`} passHref>
-            <Card className="relative w-[260px] cursor-pointer rounded-lg border-0 p-2 hover:bg-gray-100">
+            <Card className="relative w-[230px] cursor-pointer rounded-lg border-0 p-2 hover:bg-gray-100">
                 {/* Thumbnail image at the top */}
                 {project.images && project.images.length > 0 && (
-                    <div className="w-full h-[130px] bg-red-500 rounded-lg">
+                    <div className="w-full h-[115px] bg-red-500 rounded-lg">
                         {/* <Image
                             src={project.images[0]} // Use the first image as thumbnail
                             alt={`${project.name} thumbnail`}
@@ -76,7 +92,13 @@ export default function ProjectCard({
                                 className="rounded-full border-2 border-white"
                             />
                         ))} */}
-                    {isMounted && <AvatarCircles avatarUrls={avatarUrls} />}
+                    {isMounted && (
+                        <AvatarCircles
+                            // avatarUrls={[avatarUrls[0]]}
+                            // numPeople={avatarUrls.length - 1}
+                            avatarUrls={avatarUrls}
+                        />
+                    )}
                 </CardFooter>
             </Card>
         </Link>
