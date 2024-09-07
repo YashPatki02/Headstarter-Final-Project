@@ -677,13 +677,16 @@ const Profile = () => {
             {tab === "projects" && (
                 <div className="flex flex-col gap-2 w-full mb-20">
                     <div className="flex gap-6 bg-background rounded-lg p-4">
-                        <div className="flex gap-2 w-full">
+                        <div className="flex w-full">
                             <Input
                                 type="text"
                                 placeholder="Search Projects"
-                                className="w-full text-sm focus:outline-none"
+                                className="w-full text-sm focus:outline-none rounded-r-none"
                             />
-                            <Button className="text-sm" variant="secondary">
+                            <Button
+                                className="text-sm border-[1px] rounded-l-none border-primary"
+                                variant="ghost"
+                            >
                                 Search
                             </Button>
                         </div>
@@ -713,6 +716,21 @@ const Profile = () => {
                         toggleTabCollapse={toggleTabCollapse}
                         projects={projects}
                     />
+                </div>
+            )}
+
+            {tab === "pitches" && (
+                <div className="flex flex-col gap-2 w-full mb-20">
+                    <div className="flex items-center justify-center h-[50vh] bg-background rounded-lg p-4">
+                        <div className="flex flex-col gap-2 items-center bg-primary p-6 rounded-md">
+                            <h1 className="text-3xl text-background">
+                                Pitches Coming Soon
+                            </h1>
+                            <p className="text-lg text-muted">
+                                Stay tuned for updates!
+                            </p>
+                        </div>
+                    </div>
                 </div>
             )}
         </div>
