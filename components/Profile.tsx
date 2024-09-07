@@ -35,11 +35,25 @@ import { Label } from "./ui/label";
 import ProfileProjectsCard from "./ProfileProjectsCard";
 import { Textarea } from "./ui/textarea";
 
+type ProjectTabTypes = "active" | "collaborations" | "archived";
+
 const Profile = () => {
     const [tab, setTab] = useState("about");
     const { user } = useUser();
-
     const [copiedPlatform, setCopiedPlatform] = useState("");
+
+    const [tabCollapsed, setTabCollapsed] = useState({
+        active: false,
+        collaborations: false,
+        archived: false,
+    });
+
+    const toggleTabCollapse = (tabName: ProjectTabTypes) => {
+        setTabCollapsed((prevState) => ({
+            ...prevState,
+            [tabName]: !prevState[tabName],
+        }));
+    };
 
     const handleCopy = (text: string, platform: string) => {
         let textCopy = text;
@@ -154,7 +168,7 @@ const Profile = () => {
         },
     ];
 
-    const [User, setUser] = useState({
+    const [userProfile, setUserProfile] = useState({
         imageUrl: "https://randomuser",
         firstName: "Jane",
         lastName: "Doe",
@@ -172,23 +186,26 @@ const Profile = () => {
         ],
     });
 
-    const handleInputChange = (key: string, value: string) => {
-        setUser({ ...User, [key]: value });
+    const [updatedProfile, setUpdatedProfile] = useState({ ...userProfile });
+
+    const handleInputChange = (field: string, value: string) => {
+        setUpdatedProfile((prevUser) => {
+            if (field === "skills" || field === "interests") {
+                return {
+                    ...prevUser,
+                    [field]: [prevUser[field], value],
+                };
+            } else {
+                return {
+                    ...prevUser,
+                    [field]: value,
+                };
+            }
+        });
     };
 
-    type ProjectTabTypes = "active" | "collaborations" | "archived";
-
-    const [tabCollapsed, setTabCollapsed] = useState({
-        active: false,
-        collaborations: false,
-        archived: false,
-    });
-
-    const toggleTabCollapse = (tabName: ProjectTabTypes) => {
-        setTabCollapsed((prevState) => ({
-            ...prevState,
-            [tabName]: !prevState[tabName],
-        }));
+    const handleSave = () => {
+        setUserProfile({ ...updatedProfile });
     };
 
     return (
@@ -245,17 +262,20 @@ const Profile = () => {
                     <div className="relative flex flex-col sm:flex-row justify-between items-start sm:items-center bg-background rounded-lg p-4">
                         <div className="flex gap-4 items-center">
                             <Avatar className="w-20 h-20">
-                                <AvatarImage src={user?.imageUrl} />
+                                <AvatarImage src={userProfile?.imageUrl} />
                                 <AvatarFallback>
-                                    {user?.firstName?.[0] ?? "U"}
-                                    {user?.lastName?.[0] ?? "U"}
+                                    {userProfile?.firstName?.[0] ?? "U"}
+                                    {userProfile?.lastName?.[0] ?? "U"}
                                 </AvatarFallback>
                             </Avatar>
 
                             <div className="flex flex-col ml-2">
-                                <h2 className="text-md">Yash Patki</h2>
+                                <h2 className="text-md">
+                                    {userProfile?.firstName}{" "}
+                                    {userProfile?.lastName}
+                                </h2>
                                 <p className="text-sm text-muted-foreground">
-                                    @{user?.username}
+                                    @{userProfile?.username}
                                 </p>
                             </div>
                         </div>
@@ -264,7 +284,7 @@ const Profile = () => {
                                 <Linkedin className="w-4 h-4" />
                                 <div className="flex justify-between items-center w-full">
                                     <p className="text-xs text-muted-foreground">
-                                        yourprofile
+                                        {userProfile.linkedin}
                                     </p>
                                     {copiedPlatform === "linkedin" ? (
                                         <Check className="w-4 h-4 ml-2 text-primary" />
@@ -285,7 +305,7 @@ const Profile = () => {
                                 <Github className="w-4 h-4" />
                                 <div className="flex justify-between items-center w-full">
                                     <p className="text-xs text-muted-foreground">
-                                        yourprofile
+                                        {userProfile.github}
                                     </p>
                                     {copiedPlatform === "github" ? (
                                         <Check className="w-4 h-4 ml-2 text-primary" />
@@ -306,7 +326,7 @@ const Profile = () => {
                                 <CircleUser className="w-4 h-4" />
                                 <div className="flex justify-between items-center w-full">
                                     <p className="text-xs text-muted-foreground">
-                                        yourwebsite.com
+                                        {userProfile.portfolio}
                                     </p>
                                     {copiedPlatform === "portfolio" ? (
                                         <Check className="w-4 h-4 ml-2 text-primary" />
@@ -331,6 +351,9 @@ const Profile = () => {
                                     className="rounded-full self-start absolute top-3 right-3"
                                     variant="secondary"
                                     size="icon"
+                                    onClick={() =>
+                                        setUpdatedProfile({ ...userProfile })
+                                    }
                                 >
                                     <Edit2 className="w-4 h-4" />
                                 </Button>
@@ -358,7 +381,7 @@ const Profile = () => {
                                         <div className="flex gap-2">
                                             <Input
                                                 id="firstName"
-                                                value={User.firstName}
+                                                value={updatedProfile.firstName}
                                                 placeholder="First Name"
                                                 className="text-xs"
                                                 onChange={(e) =>
@@ -370,7 +393,7 @@ const Profile = () => {
                                             />
                                             <Input
                                                 id="lastName"
-                                                value={User.lastName}
+                                                value={updatedProfile.lastName}
                                                 placeholder="Last Name"
                                                 className="text-xs"
                                                 onChange={(e) =>
@@ -393,7 +416,7 @@ const Profile = () => {
                                         </Label>
                                         <Input
                                             id="username"
-                                            value={User.username}
+                                            value={updatedProfile.username}
                                             placeholder="Username"
                                             className="text-xs"
                                             onChange={(e) =>
@@ -421,7 +444,7 @@ const Profile = () => {
                                             </div>
                                             <Input
                                                 id="linkedin"
-                                                value={User.linkedin}
+                                                value={updatedProfile.linkedin}
                                                 className="rounded-l-none text-xs"
                                                 placeholder="LinkedIn"
                                                 onChange={(e) =>
@@ -441,7 +464,7 @@ const Profile = () => {
                                             </div>
                                             <Input
                                                 id="github"
-                                                value={User.github}
+                                                value={updatedProfile.github}
                                                 className="rounded-l-none text-xs"
                                                 placeholder="GitHub"
                                                 onChange={(e) =>
@@ -461,7 +484,7 @@ const Profile = () => {
                                             </div>
                                             <Input
                                                 id="portfolio"
-                                                value={User.portfolio}
+                                                value={updatedProfile.portfolio}
                                                 className="rounded-l-none text-xs"
                                                 placeholder="Portfolio"
                                                 onChange={(e) =>
@@ -478,7 +501,10 @@ const Profile = () => {
                                 {/* Footer Buttons */}
                                 <SheetFooter className="flex gap-2">
                                     <SheetClose asChild>
-                                        <Button type="submit">
+                                        <Button
+                                            type="submit"
+                                            onClick={handleSave}
+                                        >
                                             save changes
                                         </Button>
                                     </SheetClose>
@@ -490,39 +516,21 @@ const Profile = () => {
                     <div className="relative flex flex-col md:flex-row justify-between md:gap-32 items-start bg-background rounded-lg p-4">
                         <div className="flex flex-col gap-2 md:w-1/2">
                             <h2 className="text-sm">Bio</h2>
-                            <p className="text-xs mb-2">
-                                Lorem ipsum dolor sit amet, consectetur
-                                adipiscing elit. Sed quis risus in nisl
-                                fermentum aliquet. Suspendisse potenti. Nulla
-                                facilisi. Nam scelerisque, purus nec ultricies.
-                            </p>
+                            <p className="text-xs mb-2">{userProfile.bio}</p>
                             <div className="flex flex-col gap-2">
                                 <h2 className="text-sm">Interests</h2>
                                 <div className="flex flex-wrap gap-2">
-                                    <Badge
-                                        variant="outline"
-                                        className="font-normal text-xs text-nowrap"
-                                    >
-                                        Web Development
-                                    </Badge>
-                                    <Badge
-                                        variant="outline"
-                                        className="font-normal text-xs text-nowrap"
-                                    >
-                                        Open Source
-                                    </Badge>
-                                    <Badge
-                                        variant="outline"
-                                        className="font-normal text-xs text-nowrap"
-                                    >
-                                        AI & ML
-                                    </Badge>
-                                    <Badge
-                                        variant="outline"
-                                        className="font-normal text-xs text-nowrap"
-                                    >
-                                        UI/UX Design
-                                    </Badge>
+                                    {userProfile.interests.map(
+                                        (interest, idx) => (
+                                            <Badge
+                                                key={idx}
+                                                variant="outline"
+                                                className="font-normal text-xs text-nowrap"
+                                            >
+                                                {interest}
+                                            </Badge>
+                                        )
+                                    )}
                                 </div>
                             </div>
                         </div>
@@ -530,30 +538,15 @@ const Profile = () => {
                             <div className="flex flex-col gap-2 mt-4 md:mt-0">
                                 <h2 className="text-sm">Top Skills</h2>
                                 <div className="flex flex-wrap gap-2">
-                                    <Badge
-                                        variant="outline"
-                                        className="font-normal text-xs text-nowrap"
-                                    >
-                                        React
-                                    </Badge>
-                                    <Badge
-                                        variant="outline"
-                                        className="font-normal text-xs text-nowrap"
-                                    >
-                                        Node
-                                    </Badge>
-                                    <Badge
-                                        variant="outline"
-                                        className="font-normal text-xs text-nowrap"
-                                    >
-                                        GraphQL
-                                    </Badge>
-                                    <Badge
-                                        variant="outline"
-                                        className="font-normal text-xs text-nowrap"
-                                    >
-                                        Next.js
-                                    </Badge>
+                                    {userProfile.skills.map((skill, idx) => (
+                                        <Badge
+                                            key={idx}
+                                            variant="outline"
+                                            className="font-normal text-xs text-nowrap"
+                                        >
+                                            {skill}
+                                        </Badge>
+                                    ))}
                                 </div>
                             </div>
 
@@ -575,6 +568,9 @@ const Profile = () => {
                                     className="rounded-full self-start absolute top-3 right-3"
                                     variant="secondary"
                                     size="icon"
+                                    onClick={() =>
+                                        setUpdatedProfile({ ...userProfile })
+                                    }
                                 >
                                     <Edit2 className="w-4 h-4" />
                                 </Button>
@@ -602,7 +598,7 @@ const Profile = () => {
                                         <div className="flex gap-2">
                                             <Textarea
                                                 id="bio"
-                                                value={User.bio}
+                                                value={updatedProfile.bio}
                                                 maxLength={150}
                                                 placeholder="Enter a short bio"
                                                 className="text-xs"
@@ -626,7 +622,7 @@ const Profile = () => {
                                         </Label>
                                         <Input
                                             id="skills"
-                                            value={User.skills}
+                                            value={updatedProfile.skills}
                                             placeholder="Skills"
                                             className="text-xs"
                                             onChange={(e) =>
@@ -648,7 +644,7 @@ const Profile = () => {
                                         </Label>
                                         <Input
                                             id="interests"
-                                            value={User.interests}
+                                            value={updatedProfile.interests}
                                             placeholder="Interests"
                                             className="text-xs"
                                             onChange={(e) =>
@@ -664,7 +660,10 @@ const Profile = () => {
                                 {/* Footer Buttons */}
                                 <SheetFooter className="flex gap-2">
                                     <SheetClose asChild>
-                                        <Button type="submit">
+                                        <Button
+                                            type="submit"
+                                            onClick={handleSave}
+                                        >
                                             save changes
                                         </Button>
                                     </SheetClose>
