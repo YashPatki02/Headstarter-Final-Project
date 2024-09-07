@@ -4,6 +4,7 @@ import { Merge } from "lucide-react";
 import { animate } from "framer-motion";
 import Link from "next/link";
 import { Button } from "./ui/button";
+import { SignInButton } from "@clerk/nextjs";
 
 const Header = () => {
     const goToFeatures = () => {
@@ -36,8 +37,11 @@ const Header = () => {
                 </ul>
             </nav>
             <Button asChild>
-                <Link href="/sign-in">get started</Link>
+              <Link href="/sign-in">get started</Link> 
             </Button>
+            {/* <Button asChild>
+                <SignInButton />
+            </Button> */}
         </header>
     );
 };

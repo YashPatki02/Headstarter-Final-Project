@@ -2,17 +2,17 @@
 import React from "react";
 import ProfileOverview from "@/components/profile/profile-overview";
 import SkillsAndInterests from "@/components/profile/SkillsAndInterests";
-// import Projects from "@/components/profile/Projects";
-// import SocialLinks from "@/components/profile/SocialLinks";
-import dynamic from "next/dynamic";
+import Projects from "@/components/profile/Projects";
+import SocialLinks from "@/components/profile/SocialLinks";
+// import dynamic from "next/dynamic";
 
-// Lazy load the SocialLinks component
-const SocialLinks = dynamic(() => import("@/components/profile/SocialLinks"), {
-    loading: () => <p>Loading...</p>,
-});
-const Projects = dynamic(() => import("@/components/profile/Projects"), {
-    loading: () => <p>Loading...</p>,
-});
+// // Lazy load the SocialLinks component
+// const SocialLinks = dynamic(() => import("@/components/profile/SocialLinks"), {
+//     loading: () => <p>Loading...</p>,
+// });
+// const Projects = dynamic(() => import("@/components/profile/Projects"), {
+//     loading: () => <p>Loading...</p>,
+// });
 
 function ProfilePage(/* { user } */) {
     const user = {
