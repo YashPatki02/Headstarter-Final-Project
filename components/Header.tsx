@@ -36,12 +36,12 @@ const Header = () => {
                     </li>
                 </ul>
             </nav>
-            {/* <Button asChild>
-              <Link href="/sign-in">get started</Link> 
-            </Button> */}
             <Button asChild>
-                <SignInButton />
+              <Link href="/sign-in">get started</Link> 
             </Button>
+            {/* <Button asChild>
+                <SignInButton />
+            </Button> */}
         </header>
     );
 };
