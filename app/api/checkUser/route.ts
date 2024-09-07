@@ -3,8 +3,15 @@ import { supabaseClient } from "@/lib/supabaseClient";
 
 // Handler for POST requests
 export async function POST(req: NextRequest) {
-    const { userId, firstName, lastName, emailAddress, username, imageUrl, token } =
-        await req.json();
+    const {
+        userId,
+        firstName,
+        lastName,
+        emailAddress,
+        username,
+        imageUrl,
+        token,
+    } = await req.json();
 
     if (!userId) {
         return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
@@ -17,8 +24,8 @@ export async function POST(req: NextRequest) {
         // Check if the user already exists in the Supabase table
         const { data: existingUser, error: selectError } = await supabase
             .from("users")
-            .select("user_id")
-            .eq("user_id", userId)
+            .select("id")
+            .eq("id", userId)
             .single();
 
         if (selectError && selectError.code !== "PGRST116") {
@@ -38,7 +45,7 @@ export async function POST(req: NextRequest) {
             .from("users")
             .insert([
                 {
-                    user_id: userId,
+                    id: userId,
                     first_name: firstName || "",
                     last_name: lastName || "",
                     email: emailAddress || "",
