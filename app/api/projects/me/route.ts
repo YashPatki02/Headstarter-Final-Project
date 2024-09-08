@@ -16,10 +16,24 @@ export async function GET(req: NextRequest) {
 
     // Gets user owned projects
     try {
+        // const { data, error } = await supabase
+        //     .from("projects")
+        //     .select("*, collaborators(*)") // Left join on projects table
+        //     .or(`user_id.eq.${userId}, collaborators.user_id.eq.${userId}`);
+
         const { data, error } = await supabase
             .from("projects")
-            .select("*, collaborators!left(*)") // Left join on projects table
-            .or(`user_id.eq.${userId}, collaborators.user_id.eq.${userId}`);
+            .select(`*, collaborators(*)`)
+            .eq("collaborators.user_id", userId);
+
+        // const { data, error } = await supabase
+        //     .from("test")
+        //     .select() // Left join on projects table
+        //     .or(
+        //         `projects.user_id.eq.${userId}, collaborators.user_id.eq.${userId}`
+        //     );
+
+        // .eq("user_id", userId);
 
         return NextResponse.json(
             { message: "Successfully fetched user projects", data },
