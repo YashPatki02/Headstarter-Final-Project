@@ -96,7 +96,7 @@ const Profile = () => {
             demo_link: "https://demo.workout-tracker.com",
             images: ["https://linktoimage1.com"],
             videos: [],
-            status: "open to feature requests",
+            status: "active",
             progress: {
                 timeline: "Completed MVP",
                 upcoming_features: "Add Social Sharing Feature",
@@ -153,7 +153,7 @@ const Profile = () => {
             demo_link: "https://demo.finance-manager.com",
             images: ["https://linktoimage1.com"],
             videos: [],
-            status: "open to feature requests",
+            status: "active",
             progress: {
                 timeline: "Initial Release Completed",
                 upcoming_features: "Integration with Bank APIs",
