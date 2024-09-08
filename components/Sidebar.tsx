@@ -17,7 +17,7 @@ const Sidebar = () => {
 
     return isSidebarExpanded ? (
         // <aside className="w-1/2 z-40 fixed inset-x-0 h-screen bg-red-500 border-r-[1px] sm:relative sm:w-1/3 md:w-1/4 lg:w-1/6">
-        <aside className="w-1/2 mr-2 z-40 fixed top-0 left-0 h-screen border-r-[1px] sm:w-1/3 md:w-1/4 lg:w-1/6">
+        <aside className="w-1/2 mr-2 z-40 fixed top-0 left-0 h-screen bg-background border-r-[1px] sm:w-1/3 md:w-1/4 lg:w-1/6">
             <div className="flex flex-col gap-2 h-full justify-start mt-5 px-2">
                 <TooltipProvider>
                     <Tooltip>

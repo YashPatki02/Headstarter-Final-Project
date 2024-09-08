@@ -266,7 +266,7 @@ const Profile = () => {
 
             {tab === "about" && (
                 <div className="flex flex-col gap-2 w-full mb-20">
-                    <div className="relative flex flex-col sm:flex-row justify-between items-start sm:items-center bg-background rounded-lg p-4">
+                    <div className="relative flex flex-col mt-4 sm:mt-0 sm:flex-row justify-between items-start sm:items-center bg-background rounded-lg p-4">
                         <div className="flex gap-4 items-center">
                             <Avatar className="w-20 h-20">
                                 <AvatarImage src={userProfile?.imageUrl} />
@@ -355,7 +355,7 @@ const Profile = () => {
                         <Sheet>
                             <SheetTrigger asChild>
                                 <Button
-                                    className="rounded-full self-start absolute top-3 right-3"
+                                    className="rounded-full self-start absolute -top-3 right-1"
                                     variant="outline"
                                     size="icon"
                                     onClick={() => {
@@ -560,7 +560,7 @@ const Profile = () => {
                         </Sheet>
                     </div>
 
-                    <div className="relative flex flex-col md:flex-row justify-between md:gap-32 items-start bg-background rounded-lg p-4">
+                    <div className="relative flex flex-col mt-2 md:flex-row justify-between md:gap-32 items-start bg-background rounded-lg p-4">
                         <div className="flex flex-col gap-2 md:w-1/2">
                             <h2 className="text-sm">Bio</h2>
                             <p className="text-xs mb-2">{userProfile.bio}</p>
@@ -612,7 +612,7 @@ const Profile = () => {
                         <Sheet>
                             <SheetTrigger asChild>
                                 <Button
-                                    className="rounded-full self-start absolute top-3 right-3"
+                                    className="rounded-full self-start absolute -top-3 right-1"
                                     variant="outline"
                                     size="icon"
                                     onClick={() =>
@@ -672,10 +672,7 @@ const Profile = () => {
                                             tags={updatedProfile.skills}
                                             maxTags={5}
                                             onTagsChange={(tags) =>
-                                                handleTagsChange(
-                                                    "skills",
-                                                    tags
-                                                )
+                                                handleTagsChange("skills", tags)
                                             }
                                             className="text-xs"
                                             placeholder="Add skills"

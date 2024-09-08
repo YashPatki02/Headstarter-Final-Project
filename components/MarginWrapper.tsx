@@ -14,7 +14,7 @@ const MarginWrapper: React.FC<MarginWrapperProps> = ({ children }) => {
             {children}
         </div>
     ) : (
-        <div className="w-[calc(100vw-5rem)] ml-20">
+        <div className="sm:w-[calc(100vw-5rem)] sm:ml-20">
             {children}
         </div>
     );

@@ -148,7 +148,9 @@ export default function Home() {
                         <div className="flex flex-col gap-0">
                             <h1 className="text-2xl font-semibold">Home</h1>
                             <p className="text-sm text-muted-foreground">
-                                Welcome back, {user?.firstName}!
+                                {user?.firstName
+                                    ? `Welcome back, ${user.firstName}!`
+                                    : "Welocme back!"}
                             </p>
                         </div>
                         <div className="flex gap-2">
