@@ -27,8 +27,8 @@ export async function POST(req: NextRequest) {
         // Check if the user already exists in the Supabase table
         const { data: existingUser, error: selectError } = await supabase
             .from("users")
-            .select("id")
-            .eq("id", userId)
+            .select("user_id")
+            .eq("user_id", userId)
             .single();
 
         if (selectError && selectError.code !== "PGRST116") {
@@ -48,7 +48,7 @@ export async function POST(req: NextRequest) {
             .from("users")
             .insert([
                 {
-                    id: userId,
+                    user_id: userId,
                     first_name: firstName || "",
                     last_name: lastName || "",
                     email: emailAddress || "",
