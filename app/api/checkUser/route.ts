@@ -6,10 +6,7 @@ const JWT_SECRET = process.env.JWT_SECRET || "";
 
 // Handler for POST requests
 export async function POST(req: NextRequest) {
-    const {
-        imageUrl,
-        token,
-    } = await req.json();
+    const { imageUrl, token } = await req.json();
 
     if (!token) {
         return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
@@ -20,7 +17,7 @@ export async function POST(req: NextRequest) {
         const supabase = supabaseClient(token);
         const decodedToken = jwt.verify(token, JWT_SECRET) as any;
 
-        // Extract user details from the token  
+        // Extract user details from the token
         const userId = decodedToken.sub;
         const firstName = decodedToken.user_metadata.first_name;
         const lastName = decodedToken.user_metadata.last_name;

@@ -73,7 +73,7 @@ export default function Home() {
             demo_link: "https://demo.workout-tracker.com",
             images: ["https://linktoimage1.com"],
             videos: [],
-            status: "open to feature requests",
+            status: "active",
             progress: {
                 timeline: "Completed MVP",
                 upcoming_features: "Add Social Sharing Feature",
@@ -130,7 +130,7 @@ export default function Home() {
         //     demo_link: "https://demo.finance-manager.com",
         //     images: ["https://linktoimage1.com"],
         //     videos: [],
-        //     status: "open to feature requests",
+        //     status: "active",
         //     progress: {
         //         timeline: "Initial Release Completed",
         //         upcoming_features: "Integration with Bank APIs",
@@ -148,7 +148,9 @@ export default function Home() {
                         <div className="flex flex-col gap-0">
                             <h1 className="text-2xl font-semibold">Home</h1>
                             <p className="text-sm text-muted-foreground">
-                                Welcome back, {user?.firstName}!
+                                {user?.firstName
+                                    ? `Welcome back, ${user.firstName}!`
+                                    : "Welocme back!"}
                             </p>
                         </div>
                         <div className="flex gap-2">
@@ -208,7 +210,7 @@ export default function Home() {
                                 </Button>
                             </Link>
                         </div>
-                        <div className="flex flex-col gap-2 bg-background rounded-lg p-4">
+                        {/* <div className="flex flex-col gap-2 bg-background rounded-lg p-4">
                             <h2 className="text-md md:text-lg font-semibold">
                                 Feature Requests
                             </h2>
@@ -227,7 +229,7 @@ export default function Home() {
                                     <ArrowRight className="w-4 h-4 ml-1" />
                                 </Button>
                             </Link>
-                        </div>
+                        </div> */}
                     </div>
 
                     <div className="flex flex-col gap-2 w-full bg-background rounded-lg p-4">

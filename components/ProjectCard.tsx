@@ -65,9 +65,9 @@ export default function ProjectCard({
                     <CardTitle className="flex justify-between items-center text-md font-semibold pt-2">
                         {project.name}
                         {project.status === "open to collaboration" ? (
-                            <div className="h-2 w-2 mr-1 rounded-full bg-green-500"></div>
-                        ) : project.status === "open to feature requests" ? (
                             <div className="h-2 w-2 mr-1 rounded-full bg-cyan-500"></div>
+                        ) : project.status === "active" ? (
+                            <div className="h-2 w-2 mr-1 rounded-full bg-green-500"></div>
                         ) : (
                             <div className="h-2 w-2 mr-1 rounded-full bg-red-500"></div>
                         )}
