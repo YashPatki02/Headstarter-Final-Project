@@ -10,7 +10,7 @@ const MarginWrapper: React.FC<MarginWrapperProps> = ({ children }) => {
     const { isSidebarExpanded } = useSidebar();
 
     return isSidebarExpanded ? (
-        <div className="ml-0 sm:ml-[33.33vw] md:ml-[24vw] lg:ml-[16.66vw] ">
+        <div className="ml-0 sm:ml-[33.33vw] md:ml-[24vw] lg:ml-[16.66vw]">
             {children}
         </div>
     ) : (

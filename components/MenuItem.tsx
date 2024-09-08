@@ -85,7 +85,7 @@ const MenuItem = ({
                                 {iconMap[item.icon as string]}
                             </Link>
                         </TooltipTrigger>
-                        <TooltipContent side="right" sideOffset={8}>
+                        <TooltipContent className="z-[100]" side="bottom" sideOffset={12}>
                             <span>{item.title.toLowerCase()}</span>
                         </TooltipContent>
                     </Tooltip>

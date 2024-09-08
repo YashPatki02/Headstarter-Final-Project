@@ -39,7 +39,7 @@ export default function RootLayout({
                                 <Sidebar />
                                 <div className="flex-1">
                                     <MarginWrapper>
-                                        <div className="sticky top-0 z-30">
+                                        <div className="sticky top-0 z-20">
                                             <DashboardHeader />
                                         </div>
                                         <main className="flex flex-col flex-grow">
@@ -54,9 +54,6 @@ export default function RootLayout({
                                             </div>
                                         </main>
                                     </MarginWrapper>
-                                    {/* <main className="w-full pt-3 px-4 sm:px-6 bg-[#F5F6FA]">
-                                        {children}
-                                    </main> */}
                                 </div>
                             </div>
                         </SidebarProvider>
