@@ -740,6 +740,7 @@ const Profile = () => {
                     </div>
 
                     <ProfileProjectsCard
+                        collapsible={true}
                         tab="active"
                         title="Your Active Projects"
                         tabCollapsed={tabCollapsed.active}
@@ -748,6 +749,7 @@ const Profile = () => {
                     />
 
                     <ProfileProjectsCard
+                        collapsible={true}
                         tab="collaborations"
                         title="Your Active Collaborations"
                         tabCollapsed={tabCollapsed.collaborations}
@@ -756,6 +758,7 @@ const Profile = () => {
                     />
 
                     <ProfileProjectsCard
+                        collapsible={true}
                         tab="archived"
                         title="Your Archived Projects"
                         tabCollapsed={tabCollapsed.archived}

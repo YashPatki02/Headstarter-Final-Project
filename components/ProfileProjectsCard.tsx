@@ -25,25 +25,31 @@ type Project = {
 type ProjectTabTypes = "active" | "collaborations" | "archived";
 
 type ProjectCardProps = {
-    tab: ProjectTabTypes;
-    title: string;
-    tabCollapsed: boolean;
-    toggleTabCollapse: (tab: ProjectTabTypes) => void;
+    collapsible?: boolean;
+    tab?: ProjectTabTypes;
+    title?: string;
+    tabCollapsed?: boolean;
+    toggleTabCollapse?: (tab: ProjectTabTypes) => void;
     projects: Project[];
 };
 
 const ProfileProjectsCard = ({
+    collapsible,
     tab,
     title,
     tabCollapsed,
     toggleTabCollapse,
     projects,
 }: ProjectCardProps) => {
-    return (
+    return collapsible ? (
         <div className="flex flex-col gap-2 bg-background rounded-lg p-4">
             <div
                 className="flex justify-between items-center cursor-pointer"
-                onClick={() => toggleTabCollapse(tab)}
+                onClick={() => {
+                    if (toggleTabCollapse) {
+                        toggleTabCollapse(tab || "active");
+                    }
+                }}
             >
                 <h2 className="text-lg font-semibold">{title}</h2>
 
@@ -64,6 +70,17 @@ const ProfileProjectsCard = ({
                     </div>
                 </>
             )}
+        </div>
+    ) : (
+        <div className="flex flex-col gap-2 bg-background rounded-lg p-4">
+            <h2 className="text-lg font-semibold">{title}</h2>
+            <StatusBadge />
+
+            <div className="flex gap-2 justify-start flex-wrap pb-4">
+                {projects.map((project) => (
+                    <ProjectCard key={project.id} project={project} />
+                ))}
+            </div>
         </div>
     );
 };
