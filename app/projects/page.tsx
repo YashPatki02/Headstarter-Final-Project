@@ -1,9 +1,25 @@
-import React from "react";
+"use client";
+import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import ProfileProjectsCard from "@/components/ProfileProjectsCard";
+import {
+    DropdownMenu,
+    DropdownMenuTrigger,
+    DropdownMenuContent,
+    DropdownMenuLabel,
+    DropdownMenuSeparator,
+    DropdownMenuItem,
+} from "@/components/ui/dropdown-menu";
 
 const ProjectsPage = () => {
+    const [filter, setFilter] = useState<string | null>(null);
+
+    const handleFilter = (filterOption: string) => {
+        setFilter(filterOption);
+        // Add your filter logic here
+        console.log(`Selected filter: ${filterOption}`);
+    };
 
     const projects = [
         {
@@ -102,7 +118,7 @@ const ProjectsPage = () => {
         //     category: "Web Development",
         // },
     ];
-    
+
     return (
         <div className="flex flex-col gap-4 items-start mt-4">
             <div className="flex justify-between items-center w-full mb-2">
@@ -115,14 +131,59 @@ const ProjectsPage = () => {
                                 <Input
                                     type="text"
                                     placeholder="Search Projects"
-                                    className="w-full text-sm focus:outline-none rounded-r-none"
+                                    className="w-full text-sm rounded-r-none"
                                 />
                                 <Button
-                                    className="text-sm border-[1px] w-32 rounded-l-none border-primary"
-                                    variant="outline"
+                                    className="text-sm border-[1px] w-32 rounded-l-none"
                                 >
                                     Search
                                 </Button>
+                                <DropdownMenu>
+                                    <DropdownMenuTrigger asChild>
+                                        <Button
+                                            className="text-sm border-[1px] ml-4 w-32"
+                                            variant="outline"
+                                        >
+                                            {filter
+                                                ? `Filter: ${filter}`
+                                                : "Filter"}
+                                        </Button>
+                                    </DropdownMenuTrigger>
+                                    <DropdownMenuContent>
+                                        <DropdownMenuLabel className="text-xs">
+                                            Filter by
+                                        </DropdownMenuLabel>
+                                        <DropdownMenuSeparator />
+                                        <DropdownMenuItem
+                                            className="text-xs"
+                                            onClick={() => handleFilter("Date")}
+                                        >
+                                            Date
+                                        </DropdownMenuItem>
+                                        <DropdownMenuItem
+                                            className="text-xs"
+                                            onClick={() => handleFilter("Name")}
+                                        >
+                                            Name
+                                        </DropdownMenuItem>
+                                        <DropdownMenuItem
+                                            className="text-xs"
+                                            onClick={() =>
+                                                handleFilter("Category")
+                                            }
+                                        >
+                                            Category
+                                        </DropdownMenuItem>
+                                        <DropdownMenuItem
+                                            className="text-xs"
+                                            onClick={() =>
+                                                handleFilter("Status")
+                                            }
+                                        >
+                                            Status
+                                        </DropdownMenuItem>
+                                    </DropdownMenuContent>
+                                </DropdownMenu>
                             </div>
                         </div>
 
