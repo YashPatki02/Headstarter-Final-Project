@@ -313,6 +313,8 @@ const Profile = () => {
     const togglePasswordVisibility = () => {
         setShowPassword((prev) => !prev);
     };
+
+    
     if (loading) {
         return <p>Loading...</p>; //!Change the loading state
     }

@@ -127,22 +127,21 @@ const ProjectsPage = () => {
 
                     <div className="flex flex-col gap-2 w-full mb-20">
                         <div className="flex gap-6 bg-background rounded-lg p-4">
-                            <div className="flex gap-2 w-full">
+                            <div className="flex w-full">
                                 <Input
                                     type="text"
                                     placeholder="Search Projects"
                                     className="w-full text-sm rounded-r-none"
                                 />
                                 <Button
-                                    className="text-sm border-[1px] w-32 rounded-l-none border-primary"
-                                    variant="outline"
+                                    className="text-sm border-[1px] w-32 rounded-l-none"
                                 >
                                     Search
                                 </Button>
                                 <DropdownMenu>
                                     <DropdownMenuTrigger asChild>
                                         <Button
-                                            className="text-sm border-[1px] w-32 rounded-l-none border-primary"
+                                            className="text-sm border-[1px] ml-4 w-32"
                                             variant="outline"
                                         >
                                             {filter
