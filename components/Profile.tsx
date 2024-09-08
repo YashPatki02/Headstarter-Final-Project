@@ -493,7 +493,7 @@ const Profile = () => {
                                         {userProfile.portfolio ? (
                                             <a
                                                 className=" to-blue-300"
-                                                href={`https://www.${userProfile.portfolio}`}
+                                                href={`https://${userProfile.portfolio}`}
                                                 target="_blank"
                                             >
                                                 {userProfile.portfolio}
