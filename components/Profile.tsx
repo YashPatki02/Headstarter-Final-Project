@@ -286,6 +286,13 @@ const Profile = () => {
                 [field]: tags,
             };
         });
+
+        setChangedFields((prevFields) => {
+            return {
+                ...prevFields,
+                [field]: tags,
+            };
+        });
     };
 
     const handleSave = async () => {
@@ -296,10 +303,10 @@ const Profile = () => {
             }
         });
 
-        // console.log(updatedProfile);
+        console.log(updatedProfile);
         // const changes = getChangedFields();
         // console.log("changes", changes);
-        // console.log(changedFields);
+        console.log(changedFields);
         if (Object.keys(changedFields).length > 0) {
             try {
                 const token = await getToken({ template: "supabase" });
@@ -332,7 +339,7 @@ const Profile = () => {
         } else {
             console.log("No changes to update");
         }
-        setUserProfile({ ...updatedProfile });
+        // setUserProfile({ ...updatedProfile });
         setChangedFields({});
         setShowPassword(false);
     };
