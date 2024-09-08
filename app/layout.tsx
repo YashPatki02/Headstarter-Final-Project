@@ -7,6 +7,7 @@ import Footer from "@/components/Footer";
 import DashboardHeader from "@/components/DashboardHeader";
 import Sidebar from "@/components/Sidebar";
 import { SidebarProvider } from "@/components/sidebarContext";
+import MarginWrapper from "@/components/MarginWrapper";
 
 const inter = Inter({ subsets: ["latin"] });
 const poppins = Poppins({ subsets: ["latin"], weight: ["500"] });
@@ -37,20 +38,25 @@ export default function RootLayout({
                             <div className="flex justify-start items-start overflow-y-hidden">
                                 <Sidebar />
                                 <div className="flex-1">
-                                    <div className="sticky top-0 z-10">
-                                        <DashboardHeader />
-                                    </div>
-                                    <main className="flex flex-col flex-grow">
-                                        <div className="w-full overflow-x-auto">
-                                            <div className="sm:h-[calc(99vh-50px)] overflow-auto">
-                                                <div className="w-full flex justify-center mx-auto overflow-auto h-[calc(100vh - 120px)] overflow-y-hidden relative">
-                                                    <div className="w-full px-4 sm:px-6 bg-[#F5F6FA]">
-                                                        {children}
+                                    <MarginWrapper>
+                                        <div className="sticky top-0 z-30">
+                                            <DashboardHeader />
+                                        </div>
+                                        <main className="flex flex-col flex-grow">
+                                            <div className="w-full overflow-x-auto">
+                                                <div className="sm:h-[calc(98vh-50px)] overflow-auto">
+                                                    <div className="w-full flex justify-center mx-auto overflow-auto h-[calc(99vh - 120px)] overflow-y-hidden relative">
+                                                        <div className="w-full pt-3 px-4 sm:px-6 bg-[#F5F6FA]">
+                                                            {children}
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                    </main>
+                                        </main>
+                                    </MarginWrapper>
+                                    {/* <main className="w-full pt-3 px-4 sm:px-6 bg-[#F5F6FA]">
+                                        {children}
+                                    </main> */}
                                 </div>
                             </div>
                         </SidebarProvider>

@@ -9,7 +9,15 @@ import {
     TooltipProvider,
     TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { Home, FileText, User, Folder, Mail, FolderKanban, Settings } from "lucide-react";
+import {
+    Home,
+    FileText,
+    User,
+    Folder,
+    Mail,
+    FolderKanban,
+    Settings,
+} from "lucide-react";
 
 const MenuItem = ({
     item,
@@ -44,14 +52,16 @@ const MenuItem = ({
                 >
                     <div
                         className={`flex items-center justify-center w-4 h-4 sm:w-5 sm:h-5 ${
-                            item.path === pathname ? "text-primary" : ""
+                            pathname.split("/")[1] === item.path.split("/")[1]
+                                ? "text-primary"
+                                : ""
                         }`}
                     >
                         {iconMap[item.icon as string]}
                     </div>
                     <p
                         className={`text-sm ${
-                            item.path === pathname
+                            pathname.split("/")[1] === item.path.split("/")[1]
                                 ? "text-primary font-semibold"
                                 : ""
                         }`}
@@ -66,7 +76,10 @@ const MenuItem = ({
                             <Link
                                 href={item.path}
                                 className={`flex items-center justify-center w-4 h-4 sm:w-5 sm:h-5  ${
-                                    item.path === pathname ? "text-primary" : ""
+                                    pathname.split("/")[1] ===
+                                    item.path.split("/")[1]
+                                        ? "text-primary"
+                                        : ""
                                 }`}
                             >
                                 {iconMap[item.icon as string]}
