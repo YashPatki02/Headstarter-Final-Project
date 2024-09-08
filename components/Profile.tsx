@@ -31,7 +31,6 @@ import { Input } from "./ui/input";
 import { Label } from "./ui/label";
 import ProfileProjectsCard from "./ProfileProjectsCard";
 import { Textarea } from "./ui/textarea";
-import { useAuth } from "@clerk/nextjs";
 
 type ProjectTabTypes = "active" | "collaborations" | "archived";
 type UserProfile = {
@@ -95,11 +94,11 @@ const Profile = () => {
     const handleCopy = (text: string, platform: string) => {
         let textCopy = text;
         if (platform === "portfolio") {
-            textCopy = `https://${userProfile.portfolio}`;
+            textCopy = `https://${userProfile?.portfolio}`;
         } else if (platform === "linkedin") {
-            textCopy = `https://linkedin.com/in/${userProfile.linkedin}`;
+            textCopy = `https://linkedin.com/in/${userProfile?.linkedin}`;
         } else if (platform === "github") {
-            textCopy = `https://github.com/${userProfile.github}`;
+            textCopy = `https://github.com/${userProfile?.github}`;
         }
 
         navigator.clipboard.writeText(textCopy);
@@ -411,7 +410,7 @@ const Profile = () => {
                             </Avatar>
 
                             <div className="flex flex-col ml-2">
-                                {userProfile.first_name ? (
+                                {userProfile?.first_name ? (
                                     <h2 className="text-md">
                                         {userProfile?.first_name}{" "}
                                         {userProfile?.last_name}
@@ -430,13 +429,13 @@ const Profile = () => {
                                 <div className="flex justify-between items-center w-full">
                                     <p className="text-xs text-muted-foreground">
                                         {/* {userProfile.linkedin?userProfile.linkedin:'--'} */}
-                                        {userProfile.linkedin ? (
+                                        {userProfile?.linkedin ? (
                                             <a
                                                 className=" to-blue-300"
-                                                href={`https://linkedin.com/in/${userProfile.linkedin}`}
+                                                href={`https://linkedin.com/in/${userProfile?.linkedin}`}
                                                 target="_blank"
                                             >
-                                                {userProfile.linkedin}
+                                                {userProfile?.linkedin}
                                             </a>
                                         ) : (
                                             "--"
@@ -462,13 +461,13 @@ const Profile = () => {
                                 <div className="flex justify-between items-center w-full">
                                     <p className="text-xs text-muted-foreground">
                                         {/* {userProfile.github?userProfile.github:'--'} */}
-                                        {userProfile.github ? (
+                                        {userProfile?.github ? (
                                             <a
                                                 className=" to-blue-300"
-                                                href={`https://github.com/${userProfile.github}`}
+                                                href={`https://github.com/${userProfile?.github}`}
                                                 target="_blank"
                                             >
-                                                {userProfile.github}
+                                                {userProfile?.github}
                                             </a>
                                         ) : (
                                             "--"
@@ -493,13 +492,13 @@ const Profile = () => {
                                 <CircleUser className="w-4 h-4" />
                                 <div className="flex justify-between items-center w-full">
                                     <p className="text-xs text-muted-foreground">
-                                        {userProfile.portfolio ? (
+                                        {userProfile?.portfolio ? (
                                             <a
                                                 className=" to-blue-300"
-                                                href={`https://www.${userProfile.portfolio}`}
+                                                href={`https://www.${userProfil?.portfolio}`}
                                                 target="_blank"
                                             >
-                                                {userProfile.portfolio}
+                                                {userProfile?.portfolio}
                                             </a>
                                         ) : (
                                             "--"
@@ -736,7 +735,7 @@ const Profile = () => {
                         <div className="flex flex-col gap-2 md:w-1/2">
                             <h2 className="text-sm">Bio</h2>
                             <p className="text-xs mb-2">
-                                {userProfile.bio ? userProfile.bio : "--"}
+                                {userProfile?.bio ? userProfile?.bio : "--"}
                             </p>
                             <div className="flex flex-col gap-2">
                                 <h2 className="text-sm">Interests</h2>
@@ -761,8 +760,8 @@ const Profile = () => {
                             <div className="flex flex-col gap-2 mt-4 md:mt-0">
                                 <h2 className="text-sm">Top Skills</h2>
                                 <div className="flex flex-wrap gap-2">
-                                    {userProfile.skills.length != 0
-                                        ? userProfile.skills.map(
+                                    {userProfile?.skills.length != 0
+                                        ? userProfile?.skills.map(
                                               (skill, idx) => (
                                                   <Badge
                                                       key={idx}
