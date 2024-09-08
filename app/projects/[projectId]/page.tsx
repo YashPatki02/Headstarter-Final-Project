@@ -58,8 +58,8 @@ const IndividualProject = () => {
         github_link: "https://github.com/user/ai-chatbot",
         demo_link: "https://demo.ai-chatbot.com",
         images: [
-            "https://cdn.pixabay.com/photo/2018/05/18/15/30/web-design-3411373_1280.jpg",
-            "https://digitalnotebook.in/up/2023/06/Website-design.jpg",
+            // "https://cdn.pixabay.com/photo/2018/05/18/15/30/web-design-3411373_1280.jpg",
+            // "https://digitalnotebook.in/up/2023/06/Website-design.jpg",
         ],
         videos: [
             "https://www.youtube.com/watch?v=IENArFXpQD8",
