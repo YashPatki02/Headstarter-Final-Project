@@ -1,0 +1,444 @@
+"use client";
+import React, { useState, useEffect } from "react";
+import { Input } from "./ui/input";
+import { Label } from "./ui/label";
+import { Textarea } from "./ui/textarea";
+import { Tags } from "./ui/tags";
+import {
+    Select,
+    SelectContent,
+    SelectGroup,
+    SelectItem,
+    SelectLabel,
+    SelectTrigger,
+    SelectValue,
+} from "@/components/ui/select";
+import { STATUS_MAP } from "@/lib/constants";
+import { ProjectType } from "@/lib/types";
+
+type ProjectEditProps = {
+    project?: ProjectType; // Optional project prop for editing
+    onSubmit: (project: ProjectType) => void; // Submit handler
+};
+
+const ProjectEdit: React.FC<ProjectEditProps> = ({ project, onSubmit }) => {
+    const [projectData, setProjectData] = useState<ProjectType>({
+        name: "",
+        tech_stack: [],
+        description: "",
+        github_link: "",
+        demo_link: "",
+        images: [],
+        videos: [],
+        status: "open to collaboration",
+        collaboration_skills: [],
+    });
+
+    // If a project is passed, prefill the form
+    useEffect(() => {
+        if (project) {
+            setProjectData(project);
+        }
+    }, [project]);
+
+    const handleInputChange = (field: string, value: string | string[]) => {
+        setProjectData({ ...projectData, [field]: value });
+    };
+
+    const handleTagsChange = (field: string, tags: string[]) => {
+        setProjectData({ ...projectData, [field]: tags });
+    };
+
+    const handleAddImage = (url: string) => {
+        setProjectData({
+            ...projectData,
+            images: [...projectData.images, url],
+        });
+    };
+
+    const handleAddVideo = (url: string) => {
+        setProjectData({
+            ...projectData,
+            videos: [...projectData.videos, url],
+        });
+    };
+
+    const handleSubmit = () => {
+        onSubmit(projectData); // Call the onSubmit function passed as a prop
+    };
+
+    return (
+        <div className="flex flex-col gap-4 items-start mt-4 mb-20">
+            <div className="flex justify-between items-center w-full mb-2">
+                <div className="flex flex-col w-full gap-4">
+                    <div className="flex sm:mr-6 items-center justify-between">
+                        <h1 className="text-2xl font-semibold">
+                            {project ? "Edit Project" : "Create a Project"}
+                        </h1>
+                    </div>
+
+                    <div className="flex flex-col gap-2 w-full mb-20">
+                        <div className="relative flex flex-col mt-4 sm:mt-0 justify-between items-start sm:items-center">
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 py-4 w-full">
+                                <div className="flex flex-col gap-4 w-full bg-background rounded-lg p-4">
+                                    <h3 className="text-lg font-semibold">
+                                        Project Details
+                                    </h3>
+                                    {/* Project Name */}
+                                    <div className="flex flex-col gap-2">
+                                        <Label
+                                            htmlFor="name"
+                                            className="text-xs"
+                                        >
+                                            Give your project a name
+                                        </Label>
+                                        <Input
+                                            id="name"
+                                            value={projectData.name}
+                                            placeholder="Enter project name"
+                                            className="text-xs"
+                                            onChange={(e) =>
+                                                handleInputChange(
+                                                    "name",
+                                                    e.target.value
+                                                )
+                                            }
+                                        />
+                                    </div>
+
+                                    {/* Description */}
+                                    <div className="flex flex-col gap-2">
+                                        <Label
+                                            htmlFor="description"
+                                            className="text-xs"
+                                        >
+                                            Describe your project
+                                        </Label>
+                                        <Textarea
+                                            id="description"
+                                            value={projectData.description}
+                                            placeholder="Describe the project"
+                                            className="text-xs h-12 max-h-24"
+                                            onChange={(e) =>
+                                                handleInputChange(
+                                                    "description",
+                                                    e.target.value
+                                                )
+                                            }
+                                            maxLength={300}
+                                        />
+                                        <p className="text-xs text-right text-gray-400 mr-2">
+                                            {300 -
+                                                projectData.description.length}
+                                        </p>
+                                    </div>
+
+                                    {/* Tech Stack */}
+                                    <div className="flex flex-col gap-2">
+                                        <Label
+                                            htmlFor="tech_stack"
+                                            className="text-xs"
+                                        >
+                                            What tech stack are you using?
+                                        </Label>
+
+                                        <Tags
+                                            id="tech_stack"
+                                            tags={projectData.tech_stack}
+                                            maxTags={10}
+                                            onTagsChange={(tags) =>
+                                                handleTagsChange(
+                                                    "tech_stack",
+                                                    tags
+                                                )
+                                            }
+                                            className="text-xs"
+                                            placeholder="Add tech stack"
+                                        />
+                                    </div>
+
+                                    <div className="flex flex-col w-full gap-2">
+                                        <Label
+                                            htmlFor="links"
+                                            className="text-xs mt-2"
+                                        >
+                                            Add links to show your project off
+                                        </Label>
+                                        <div className="flex flex-col sm:flex-row gap-2 w-full">
+                                            <div className="flex w-full">
+                                                <div className="flex items-center justify-center p-2 border-[1px] border-r-0 rounded-l-md bg-gray-200">
+                                                    <p className="text-xs">
+                                                        github.com/
+                                                    </p>
+                                                </div>
+                                                <Input
+                                                    id="github_link"
+                                                    value={
+                                                        projectData.github_link
+                                                    }
+                                                    className="rounded-l-none text-xs"
+                                                    placeholder="GitHub"
+                                                    onChange={(e) =>
+                                                        handleInputChange(
+                                                            "github_link",
+                                                            e.target.value
+                                                        )
+                                                    }
+                                                />
+                                            </div>
+
+                                            <div className="flex w-full">
+                                                <div className="flex items-center justify-center p-2 border-[1px] border-r-0 rounded-l-md bg-gray-200">
+                                                    <p className="text-xs">
+                                                        https://
+                                                    </p>
+                                                </div>
+                                                <Input
+                                                    id="demo_link"
+                                                    value={
+                                                        projectData.demo_link
+                                                    }
+                                                    className="rounded-l-none text-xs"
+                                                    placeholder="Demo Link"
+                                                    onChange={(e) =>
+                                                        handleInputChange(
+                                                            "demo_link",
+                                                            e.target.value
+                                                        )
+                                                    }
+                                                />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div className="flex flex-col gap-4 w-full bg-background rounded-lg p-4">
+                                    <h3 className="text-lg font-semibold">
+                                        Gallery
+                                    </h3>
+
+                                    {/* Images */}
+                                    <div className="flex flex-col gap-2">
+                                        <Label
+                                            htmlFor="images"
+                                            className="text-xs"
+                                        >
+                                            Add project images (first will be
+                                            thumbnail)
+                                        </Label>
+                                        <Input
+                                            id="images"
+                                            type="file"
+                                            placeholder="Add image URL"
+                                            className="text-xs"
+                                            onKeyDown={(e) => {
+                                                if (e.key === "Enter") {
+                                                    handleAddImage(
+                                                        (
+                                                            e.target as HTMLInputElement
+                                                        ).value
+                                                    );
+                                                    (
+                                                        e.target as HTMLInputElement
+                                                    ).value = "";
+                                                }
+                                            }}
+                                        />
+                                        <div className="flex flex-wrap gap-2">
+                                            {projectData.images.map(
+                                                (img, index) => (
+                                                    <img
+                                                        key={index}
+                                                        src={img}
+                                                        alt={`Project Image ${
+                                                            index + 1
+                                                        }`}
+                                                        className="h-12 w-12 object-cover rounded"
+                                                    />
+                                                )
+                                            )}
+                                        </div>
+                                    </div>
+
+                                    {/* Videos */}
+                                    <div className="flex flex-col gap-2">
+                                        <Label
+                                            htmlFor="videos"
+                                            className="text-xs"
+                                        >
+                                            Add project demos (youtube link &gt;
+                                            share &gt; embed &gt; url)
+                                        </Label>
+                                        <Input
+                                            id="videos"
+                                            placeholder="Add video URL"
+                                            className="text-xs"
+                                            onKeyDown={(e) => {
+                                                if (e.key === "Enter") {
+                                                    handleAddVideo(
+                                                        (
+                                                            e.target as HTMLInputElement
+                                                        ).value
+                                                    );
+                                                    (
+                                                        e.target as HTMLInputElement
+                                                    ).value = "";
+                                                }
+                                            }}
+                                        />
+                                        <div className="flex flex-wrap gap-2">
+                                            {projectData.videos.map(
+                                                (vid, index) => (
+                                                    <a
+                                                        key={index}
+                                                        href={vid}
+                                                        target="_blank"
+                                                        className="text-xs text-primary underline"
+                                                    >
+                                                        Video {index + 1}
+                                                    </a>
+                                                )
+                                            )}
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div className="flex flex-col gap-4 w-full bg-background rounded-lg p-4">
+                                    <h3 className="text-lg font-semibold">
+                                        Status
+                                    </h3>
+
+                                    {/* Collaboration Status */}
+                                    <div className="flex flex-col gap-2">
+                                        <Label
+                                            htmlFor="status"
+                                            className="text-xs"
+                                        >
+                                            Set status for project
+                                        </Label>
+                                        {/* <select
+                                        id="status"
+                                        value={projectData.status}
+                                        onChange={(e) =>
+                                            handleInputChange(
+                                                "status",
+                                                e.target.value
+                                            )
+                                        }
+                                    >
+                                        <option value="open to collaboration">
+                                            Open to Collaboration
+                                        </option>
+                                        <option value="closed">Closed</option>
+                                    </select> */}
+                                        <Select
+                                            value={projectData.status}
+                                            onValueChange={(value) =>
+                                                handleInputChange(
+                                                    "status",
+                                                    value
+                                                )
+                                            }
+                                        >
+                                            <SelectTrigger className="w-1/2 text-xs">
+                                                <SelectValue placeholder="Select status" />
+                                            </SelectTrigger>
+                                            <SelectContent>
+                                                <SelectGroup>
+                                                    <SelectLabel className="text-xs">
+                                                        Status
+                                                    </SelectLabel>
+                                                    <SelectItem
+                                                        className="text-xs "
+                                                        value="active"
+                                                    >
+                                                        <div className="flex gap-2 items-center">
+                                                            <div
+                                                                className={`h-2 w-2 mr-1 rounded-full ${STATUS_MAP["active"].color}`}
+                                                            ></div>
+                                                            {
+                                                                STATUS_MAP[
+                                                                    "active"
+                                                                ].text
+                                                            }
+                                                        </div>
+                                                    </SelectItem>
+                                                    <SelectItem
+                                                        className="text-xs "
+                                                        value="open to collaboration"
+                                                    >
+                                                        <div className="flex gap-2 items-center">
+                                                            <div
+                                                                className={`h-2 w-2 mr-1 rounded-full ${STATUS_MAP["open to collaboration"].color}`}
+                                                            ></div>
+                                                            {
+                                                                STATUS_MAP[
+                                                                    "open to collaboration"
+                                                                ].text
+                                                            }
+                                                        </div>
+                                                    </SelectItem>
+                                                    <SelectItem
+                                                        className="text-xs "
+                                                        value="archived"
+                                                    >
+                                                        <div className="flex gap-2 items-center">
+                                                            <div
+                                                                className={`h-2 w-2 mr-1 rounded-full ${STATUS_MAP["archived"].color}`}
+                                                            ></div>
+                                                            {
+                                                                STATUS_MAP[
+                                                                    "archived"
+                                                                ].text
+                                                            }
+                                                        </div>
+                                                    </SelectItem>
+                                                </SelectGroup>
+                                            </SelectContent>
+                                        </Select>
+                                    </div>
+
+                                    {projectData.status ===
+                                        "open to collaboration" && (
+                                        <div className="flex flex-col gap-2">
+                                            <Label
+                                                htmlFor="collaboration_skills"
+                                                className="text-xs"
+                                            >
+                                                What skills are you looking for
+                                                in collaborators?
+                                            </Label>
+                                            <Tags
+                                                tags={
+                                                    projectData.collaboration_skills
+                                                }
+                                                onTagsChange={(tags) =>
+                                                    handleTagsChange(
+                                                        "collaboration_skills",
+                                                        tags
+                                                    )
+                                                }
+                                                placeholder="Add collaboration skills"
+                                                className="text-xs"
+                                                maxTags={5}
+                                            />
+                                        </div>
+                                    )}
+                                </div>
+                            </div>
+                            {/* Submit Button */}
+                            <button
+                                onClick={handleSubmit}
+                                className="px-4 py-2 bg-primary text-white rounded-lg"
+                            >
+                                {project ? "Update Project" : "Create Project"}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    );
+};
+
+export default ProjectEdit;

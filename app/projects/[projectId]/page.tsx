@@ -44,14 +44,16 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select";
+import { useRouter } from "next/navigation";
 
 const IndividualProject = () => {
-    const { projectId: projectId } = useParams();
+    const { projectId } = useParams();
+    const router = useRouter();
     // const { user } = useUser();
     const user = {
         id: "101",
     };
-    
+
     const [userOwner, setUserOwner] = useState(false);
     const avatarUrls = [
         {
@@ -150,9 +152,16 @@ const IndividualProject = () => {
                                             options
                                         </DropdownMenuLabel>
                                         <DropdownMenuSeparator />
-                                        <DropdownMenuItem>
+                                        <DropdownMenuItem
+                                            onClick={() => {
+                                                router.push(
+                                                    `/projects/edit/${projectId}`
+                                                );
+                                            }}
+                                        >
                                             edit.
                                         </DropdownMenuItem>
+
                                         <DropdownMenuItem>
                                             <div className="flex flex-col items-start">
                                                 change status:

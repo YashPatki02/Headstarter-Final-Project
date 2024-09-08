@@ -299,7 +299,7 @@ const Profile = () => {
         Object.keys(changedFields).forEach((key) => {
             const typedKey = key as keyof UserProfile;
             if (updatedProfile[typedKey] === userProfile[typedKey]) {
-                delete changedFields[typedKey]; 
+                delete changedFields[typedKey];
             }
         });
 
@@ -922,7 +922,9 @@ const Profile = () => {
                                 Search
                             </Button>
                         </div>
-                        <Button className="text-sm">Create</Button>
+                        <Button className="text-sm" asChild>
+                            <Link href="/projects/create">Create</Link>
+                        </Button>
                     </div>
 
                     <ProfileProjectsCard
