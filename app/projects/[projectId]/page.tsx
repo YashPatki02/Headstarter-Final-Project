@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import {
@@ -22,10 +22,13 @@ import Link from "next/link";
 import HeroVideoDialog from "@/components/magicui/hero-video-dialog";
 import { Badge } from "@/components/ui/badge";
 import Image from "next/image";
+import { useUser } from "@clerk/nextjs";
+import { STATUS_MAP } from "@/lib/constants";
 
 const IndividualProject = () => {
     const { projectId: projectId } = useParams();
-
+    const { user } = useUser();
+    const [userOwner, setUserOwner] = useState(false);
     const avatarUrls = [
         {
             username: "user1",
@@ -51,7 +54,7 @@ const IndividualProject = () => {
 
     const project = {
         id: 1,
-        user_id: 101,
+        user_id: "101",
         name: "AI-Powered Chatbot",
         tech_stack: ["Python", "TensorFlow", "Flask"],
         description: `A chatbot that leverages NLP and machine learning to assist users with common tasks. A chatbot that leverages NLP and machine learning to assist users with common tasks. A chatbot that leverages NLP and machine learning to assist users with common tasks. A chatbot that leverages NLP and machine learning to assist users with common tasks. A chatbot that leverages NLP and machine learning to assist users with common tasks.`,
@@ -74,6 +77,12 @@ const IndividualProject = () => {
         category: "AI/ML",
     };
 
+    useEffect(() => {
+        if (user?.id === project.user_id) {
+            setUserOwner(true);
+        }
+    }, [user, project]);
+
     return (
         <div className="flex flex-col gap-4 items-start mt-4 mb-20">
             <div className="flex justify-between items-center w-full mb-2">
@@ -82,68 +91,91 @@ const IndividualProject = () => {
                         <h1 className="text-2xl font-semibold">
                             {project.name}
                         </h1>
-                        <DropdownMenu>
-                            <DropdownMenuTrigger>
-                                <Ellipsis size={24} />
-                            </DropdownMenuTrigger>
-                            <DropdownMenuContent side="bottom" align="end">
-                                <DropdownMenuLabel>options</DropdownMenuLabel>
-                                <DropdownMenuSeparator />
-                                <DropdownMenuItem>edit.</DropdownMenuItem>
-                                <DropdownMenuItem>
-                                    <div className="flex flex-col items-start">
-                                        change status:
-                                        <div className="flex flex-col -space-y-2 items-start ml-2">
-                                            <div className="relative flex items-center">
-                                                {project.status ===
-                                                    "active" && (
-                                                    <Check className="absolute -left-2 w-4 h-4" />
-                                                )}
-                                                <Button
-                                                    variant="ghost"
-                                                    className="hover:text-primary"
-                                                >
-                                                    <div className="h-2 w-2 mr-1 rounded-full bg-green-500"></div>
-                                                    active
-                                                </Button>
-                                            </div>
-                                            <div className="relative flex items-center">
-                                                {project.status ===
-                                                    "open to collaboration" && (
-                                                    <Check className="absolute -left-2 w-4 h-4" />
-                                                )}
-                                                <Button
-                                                    variant="ghost"
-                                                    className="hover:text-primary"
-                                                >
-                                                    <div className="h-2 w-2 mr-1 rounded-full bg-cyan-500"></div>
-                                                    open to collaboration
-                                                </Button>
-                                            </div>
-                                            <div className="relative flex items-center">
-                                                {project.status ===
-                                                    "archived" && (
-                                                    <Check className="absolute -left-2 w-4 h-4" />
-                                                )}
-                                                <Button
-                                                    variant="ghost"
-                                                    className="hover:text-primary"
-                                                >
-                                                    <div className="h-2 w-2 mr-1 rounded-full bg-red-500"></div>
-                                                    archived
-                                                </Button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </DropdownMenuItem>
-                                <DropdownMenuSeparator />
+                        <div className="flex gap-4 items-center">
+                            <Badge
+                                variant="outline"
+                                className="font-normal flex items-center gap-2 bg-background text-sm"
+                            >
+                                <div
+                                    className={`h-2 w-2 mr-1 rounded-full ${STATUS_MAP[project.status].color}`}
+                                ></div>
+                                {STATUS_MAP[project.status].text}
+                            </Badge>
 
-                                <DropdownMenuItem className="text-destructive">
-                                    delete.
-                                </DropdownMenuItem>
-                            </DropdownMenuContent>
-                        </DropdownMenu>
+                            {userOwner && (
+                                <DropdownMenu>
+                                    <DropdownMenuTrigger>
+                                        <Ellipsis size={24} />
+                                    </DropdownMenuTrigger>
+                                    <DropdownMenuContent
+                                        side="bottom"
+                                        align="end"
+                                    >
+                                        <DropdownMenuLabel>
+                                            options
+                                        </DropdownMenuLabel>
+                                        <DropdownMenuSeparator />
+                                        <DropdownMenuItem>
+                                            edit.
+                                        </DropdownMenuItem>
+                                        <DropdownMenuItem>
+                                            <div className="flex flex-col items-start">
+                                                change status:
+                                                <div className="flex flex-col -space-y-2 items-start ml-2">
+                                                    <div className="relative flex items-center">
+                                                        {project.status ===
+                                                            "active" && (
+                                                            <Check className="absolute -left-2 w-4 h-4" />
+                                                        )}
+                                                        <Button
+                                                            variant="ghost"
+                                                            className="hover:text-primary"
+                                                        >
+                                                            <div className="h-2 w-2 mr-1 rounded-full bg-green-500"></div>
+                                                            active
+                                                        </Button>
+                                                    </div>
+                                                    <div className="relative flex items-center">
+                                                        {project.status ===
+                                                            "open to collaboration" && (
+                                                            <Check className="absolute -left-2 w-4 h-4" />
+                                                        )}
+                                                        <Button
+                                                            variant="ghost"
+                                                            className="hover:text-primary"
+                                                        >
+                                                            <div className="h-2 w-2 mr-1 rounded-full bg-cyan-500"></div>
+                                                            open to
+                                                            collaboration
+                                                        </Button>
+                                                    </div>
+                                                    <div className="relative flex items-center">
+                                                        {project.status ===
+                                                            "archived" && (
+                                                            <Check className="absolute -left-2 w-4 h-4" />
+                                                        )}
+                                                        <Button
+                                                            variant="ghost"
+                                                            className="hover:text-primary"
+                                                        >
+                                                            <div className="h-2 w-2 mr-1 rounded-full bg-red-500"></div>
+                                                            archived
+                                                        </Button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </DropdownMenuItem>
+                                        <DropdownMenuSeparator />
+
+                                        <DropdownMenuItem className="text-destructive">
+                                            delete.
+                                        </DropdownMenuItem>
+                                    </DropdownMenuContent>
+                                </DropdownMenu>
+                            )}
+                        </div>
                     </div>
+
                     <div className="flex gap-4 items-center justify-between">
                         <div className="flex gap-12 items-center text-xs">
                             <div className="flex gap-4 items-center text-muted-foreground">
@@ -158,12 +190,17 @@ const IndividualProject = () => {
                             </div>
                         </div>
 
-                        <Button asChild variant="outline">
-                            <Link href="/projects">
-                                send collab request
-                                <GitPullRequest size={16} className="ml-2" />
-                            </Link>
-                        </Button>
+                        {!userOwner && project.status === "open to collaboration" && (
+                            <Button asChild className="sm:mr-6">
+                                <Link href="/projects">
+                                    send collab request
+                                    <GitPullRequest
+                                        size={16}
+                                        className="ml-2"
+                                    />
+                                </Link>
+                            </Button>
+                        )}
                     </div>
                     <div className="flex items-center gap-8">
                         <p className="text-xs text-muted-foreground">
