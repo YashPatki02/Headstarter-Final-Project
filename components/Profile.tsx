@@ -20,8 +20,10 @@ import {
     Linkedin,
     Edit2,
     Eye,
+    ArrowLeft,
+    Plus,
 } from "lucide-react";
-import { useUser } from "@clerk/clerk-react";
+import { useUser, useAuth } from "@clerk/clerk-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "./ui/badge";
 import { Tags } from "./ui/tags";
@@ -35,6 +37,7 @@ type ProjectTabTypes = "active" | "collaborations" | "archived";
 const Profile = () => {
     const [tab, setTab] = useState("about");
     const { user } = useUser();
+    const { getToken } = useAuth();
     const [copiedPlatform, setCopiedPlatform] = useState("");
 
     const [tabCollapsed, setTabCollapsed] = useState({
@@ -186,12 +189,10 @@ const Profile = () => {
 
     const handleInputChange = (field: string, value: string) => {
         setUpdatedProfile((prevUser) => {
-            
-                return {
-                    ...prevUser,
-                    [field]: value,
-                };
-            
+            return {
+                ...prevUser,
+                [field]: value,
+            };
         });
     };
 
@@ -213,6 +214,28 @@ const Profile = () => {
 
     const togglePasswordVisibility = () => {
         setShowPassword((prev) => !prev);
+    };
+
+    const uploadImage = async (filePath: string, type: string) => {
+        const token = await getToken({ template: "supabase" });
+        try {
+            const response = await fetch("/api/images", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authentication: `Bearer ${token}`,
+                },
+                body: JSON.stringify({
+                    filePath: filePath,
+                    type: type,
+                }),
+            });
+
+            const data = await response.json();
+            console.log(data.message);
+        } catch (error) {
+            console.error("Error checking user in Supabase:", error);
+        }
     };
 
     return (
@@ -672,10 +695,7 @@ const Profile = () => {
                                             tags={updatedProfile.skills}
                                             maxTags={5}
                                             onTagsChange={(tags) =>
-                                                handleTagsChange(
-                                                    "skills",
-                                                    tags
-                                                )
+                                                handleTagsChange("skills", tags)
                                             }
                                             className="text-xs"
                                             placeholder="Add skills"
@@ -739,7 +759,12 @@ const Profile = () => {
                                 Search
                             </Button>
                         </div>
-                        <Button className="text-sm">Create</Button>
+                        <Button
+                            onClick={() => setTab("create")}
+                            className="text-sm"
+                        >
+                            Create
+                        </Button>
                     </div>
 
                     <ProfileProjectsCard
@@ -767,6 +792,55 @@ const Profile = () => {
                     />
                 </div>
             )}
+
+            {tab === "create" && (
+                <div className="flex flex-col">
+                    <ArrowLeft onClick={() => setTab("projects")} />
+                    <h1> Create a Project</h1>
+                    <h2>Project Name</h2>
+                    <input type="text" placeholder="Contribu" />
+                    <h2>Description</h2>
+                    <textarea placeholder="Showcase your projects, get feedback, and collaborate with others. Find projects to work on and build projects you care about." />
+                    <h2>Images</h2>
+                    {/* Change the name of these labels? */}
+                    <div className="flex flex-row">
+                        <h3>Primary Image: </h3>
+                        <input type="file" accept="image/*" />
+                    </div>
+                    <div className="flex flex-row">
+                        <h3>Other Images: </h3>
+                        <input type="file" accept="image/*" />
+                    </div>
+                    <h2>Github Link</h2>
+                    <input
+                        type="text"
+                        placeholder="https://github.com/contribu404"
+                    />
+                    <h2>Demo Link</h2>
+                    <input
+                        type="text"
+                        placeholder="https://www.contribu.dev/"
+                    />
+                    <h2>Tech Stack</h2>
+                    <div className="flex flex-row">
+                        <input type="text" placeholder="React" />
+                        <Plus />
+                    </div>
+                    <div className="flex flex-row">
+                        <h2>Open for collaboration?</h2>
+                        <input type="checkbox" value="yes" />
+                    </div>
+                    {/* Only show if 'open for collaboration' is true */}
+                    <h2>Skills you're looking for in collaborators</h2>
+                    <input type="text" placeholder="UI/UX Design" />
+                    {/* Only show if 'open for collaboration' is false */}
+                    <div className="flex flex-row">
+                        <h2>Would you like to archive this project?</h2>
+                        <input type="checkbox" value="yes" />
+                    </div>
+                </div>
+            )}
+            {tab === "editProject"}
 
             {tab === "pitches" && (
                 <div className="flex flex-col gap-2 w-full mb-20">
