@@ -47,7 +47,11 @@ import {
 
 const IndividualProject = () => {
     const { projectId: projectId } = useParams();
-    const { user } = useUser();
+    // const { user } = useUser();
+    const user = {
+        id: "101",
+    };
+    
     const [userOwner, setUserOwner] = useState(false);
     const avatarUrls = [
         {
@@ -103,13 +107,13 @@ const IndividualProject = () => {
         }
     }, [user, project]);
 
-    const [updatedProfile, setUpdatedProfile] = useState({
+    const [updatedMessage, setUpdatedMessage] = useState({
         message: "",
         platform: "",
     });
 
     const handleInputChange = (key: string, value: string) => {
-        setUpdatedProfile((prev) => ({ ...prev, [key]: value }));
+        setUpdatedMessage((prev) => ({ ...prev, [key]: value }));
     };
 
     return (
@@ -230,7 +234,7 @@ const IndividualProject = () => {
                                             className="sm:mr-6 cursor-pointer"
                                             variant="outline"
                                             onClick={() =>
-                                                setUpdatedProfile({
+                                                setUpdatedMessage({
                                                     message: "",
                                                     platform: "",
                                                 })
@@ -264,7 +268,7 @@ const IndividualProject = () => {
                                                     <Input
                                                         id="message"
                                                         value={
-                                                            updatedProfile.message
+                                                            updatedMessage.message
                                                         }
                                                         maxLength={50}
                                                         placeholder="Message"
@@ -278,7 +282,7 @@ const IndividualProject = () => {
                                                     />
                                                     <p className="text-xs text-muted-foreground">
                                                         {50 -
-                                                            updatedProfile
+                                                            updatedMessage
                                                                 .message.length}
                                                     </p>
                                                 </div>
@@ -296,7 +300,7 @@ const IndividualProject = () => {
                                                 <div className="flex gap-2 items-center">
                                                     <Select
                                                         value={
-                                                            updatedProfile.platform
+                                                            updatedMessage.platform
                                                         }
                                                         onValueChange={(
                                                             value
@@ -336,7 +340,7 @@ const IndividualProject = () => {
                                                             </SelectGroup>
                                                         </SelectContent>
                                                     </Select>
-                                                    {updatedProfile.platform !==
+                                                    {updatedMessage.platform !==
                                                         "" && (
                                                         <Button
                                                             asChild
@@ -362,8 +366,8 @@ const IndividualProject = () => {
                                             <Button
                                                 type="submit"
                                                 onClick={() => {
-                                                    console.log(updatedProfile);
-                                                    setUpdatedProfile({
+                                                    console.log(updatedMessage);
+                                                    setUpdatedMessage({
                                                         message: "",
                                                         platform: "",
                                                     });
