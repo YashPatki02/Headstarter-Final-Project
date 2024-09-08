@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import {
@@ -29,12 +29,52 @@ import { Input } from "./ui/input";
 import { Label } from "./ui/label";
 import ProfileProjectsCard from "./ProfileProjectsCard";
 import { Textarea } from "./ui/textarea";
+import { useAuth } from "@clerk/nextjs";
 
 type ProjectTabTypes = "active" | "collaborations" | "archived";
-
+type UserProfile = {
+    image_url: string;
+    first_name: string;
+    last_name: string;
+    username: string;
+    password: string;
+    bio: string;
+    linkedin: string;
+    github: string;
+    portfolio: string;
+    skills: string[];
+    interests: string[];
+};
 const Profile = () => {
-    const [tab, setTab] = useState("about");
+    const { getToken } = useAuth();
     const { user } = useUser();
+    const [loading, setLoading] = useState(true); 
+    useEffect(() => {
+      const getUserData = async () => {
+        try {
+          // const token = await getToken();
+          const token = await getToken({ template: "supabase" });
+          const res = await fetch(`api/profile`,{
+              headers:{
+                  'Authorization': `Bearer ${token}`,
+                  'Content-Type': 'application/json'
+              },
+          });
+          const {data} = await res.json();
+          setUserProfile(data)
+          console.log(data);
+        } catch (error) {
+          console.log(error);
+        }finally {
+            setLoading(false); 
+        }
+      };
+
+      getUserData();
+    }, []);
+   
+    const [tab, setTab] = useState("about");
+  
     const [copiedPlatform, setCopiedPlatform] = useState("");
 
     const [tabCollapsed, setTabCollapsed] = useState({
@@ -53,11 +93,11 @@ const Profile = () => {
     const handleCopy = (text: string, platform: string) => {
         let textCopy = text;
         if (platform === "portfolio") {
-            textCopy = `https://${text}`;
+            textCopy = `https://${userProfile.portfolio}`;
         } else if (platform === "linkedin") {
-            textCopy = `https://linkedin.com/in/${text}`;
+            textCopy = `https://linkedin.com/in/${userProfile.linkedin}`;
         } else if (platform === "github") {
-            textCopy = `https://github.com/${text}`;
+            textCopy = `https://github.com/${userProfile.github}`;
         }
 
         navigator.clipboard.writeText(textCopy);
@@ -163,34 +203,60 @@ const Profile = () => {
         },
     ];
 
-    const [userProfile, setUserProfile] = useState({
-        imageUrl: "https://randomuser",
-        firstName: "Jane",
-        lastName: "Doe",
-        username: "janedoe",
-        password: "password",
-        bio: "Passionate web developer with a focus on front-end technologies. I love creating interactive and user-friendly web applications.",
-        linkedin: "janedoe-linkedin",
-        github: "janedoe-github",
-        portfolio: "janedoe-portfolio.com",
-        skills: ["React", "Node", "GraphQL", "Next.js"],
-        interests: [
-            "Web Development",
-            "Open Source",
-            "AI & ML",
-            "UI/UX Design",
-        ],
+    const [userProfile, setUserProfile] = useState<UserProfile>({
+            image_url: "",
+            first_name: "",
+            last_name: "",
+            username: "",
+            password: "",
+            bio: "",
+            linkedin: "",
+            github: "",
+            portfolio: "",
+            skills: [],
+            interests: [],
     });
-
     const [updatedProfile, setUpdatedProfile] = useState({ ...userProfile });
+    const getChangedFields = () => {
+        const changes: Partial<UserProfile> = {};
+    
+        Object.keys(updatedProfile).forEach((key) => {
+            const originalValue = userProfile[key as keyof UserProfile];
+            const updatedValue = updatedProfile[key as keyof UserProfile];
+    
+            // Check if both values are arrays
+            if (Array.isArray(originalValue) && Array.isArray(updatedValue)) {
+                // Compare array lengths and contents
+                if (originalValue.length !== updatedValue.length || 
+                    !originalValue.every((val, idx) => val === updatedValue[idx])) {
+                    changes[key as keyof UserProfile] = updatedValue; // Add array to changes if different
+                }
+            } 
+            // If both values are strings
+            else if (typeof originalValue === 'string' && typeof updatedValue === 'string') {
+                if (originalValue !== updatedValue) {
+                    changes[key as keyof UserProfile] = updatedValue; // Add string to changes if different
+                }
+            }
+        });
+    
+        return changes;
+    };
 
     const handleInputChange = (field: string, value: string) => {
         setUpdatedProfile((prevUser) => {
-            
+            console.log(field, value)
+            if(field=='bio'){
                 return {
                     ...prevUser,
                     [field]: value,
                 };
+            }else{
+                return {
+                    ...prevUser,
+                    [field]: value.trim(),
+                };
+            }
             
         });
     };
@@ -204,9 +270,42 @@ const Profile = () => {
         });
     };
 
-    const handleSave = () => {
-        setUserProfile({ ...updatedProfile });
-        setShowPassword(false);
+    const handleSave = async () => {
+      // update the backend
+      console.log(updatedProfile);
+      const changes = getChangedFields();
+      console.log(changes);
+      if (Object.keys(changes).length > 0) {
+        try {
+          const token = await getToken({ template: "supabase" });
+          const res = await fetch("/api/profile", {
+            method: "PUT",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+            body: JSON.stringify(changes), // Send only changed fields
+          });
+
+          if (res.ok) {
+            const data = await res.json();
+            console.log("Profile updated successfully", data);
+            setUserProfile((prevProfile) => ({ ...prevProfile, ...changes })); // Update the original profile
+          } else {
+            console.error(
+              "Failed to update profile:",
+              res.status,
+              res.statusText
+            );
+          }
+        } catch (error) {
+          console.error("Error during update:", error);
+        }
+      } else {
+        console.log("No changes to update");
+      }
+      //   setUserProfile({ ...updatedProfile });
+      setShowPassword(false);
     };
 
     const [showPassword, setShowPassword] = useState(false);
@@ -214,7 +313,9 @@ const Profile = () => {
     const togglePasswordVisibility = () => {
         setShowPassword((prev) => !prev);
     };
-
+    if (loading) {
+        return <p>Loading...</p>; //!Change the loading state
+    }
     return (
         <div className="flex flex-col gap-4 items-start mt-4">
             <div className="flex justify-between items-center w-full mb-2">
@@ -269,18 +370,18 @@ const Profile = () => {
                     <div className="relative flex flex-col sm:flex-row justify-between items-start sm:items-center bg-background rounded-lg p-4">
                         <div className="flex gap-4 items-center">
                             <Avatar className="w-20 h-20">
-                                <AvatarImage src={userProfile?.imageUrl} />
+                                <AvatarImage src={userProfile?.image_url} />
                                 <AvatarFallback>
-                                    {userProfile?.firstName?.[0] ?? "U"}
-                                    {userProfile?.lastName?.[0] ?? "N"}
+                                    {userProfile?.first_name?.[0] ?? "U"}
+                                    {userProfile?.last_name?.[0] ?? "N"}
                                 </AvatarFallback>
                             </Avatar>
 
                             <div className="flex flex-col ml-2">
-                                <h2 className="text-md">
-                                    {userProfile?.firstName}{" "}
-                                    {userProfile?.lastName}
-                                </h2>
+                                {userProfile.first_name?(<h2 className="text-md">
+                                    {userProfile?.first_name}{" "}
+                                    {userProfile?.last_name}
+                                </h2>):""}
                                 <p className="text-sm text-muted-foreground">
                                     @{userProfile?.username}
                                 </p>
@@ -291,7 +392,9 @@ const Profile = () => {
                                 <Linkedin className="w-4 h-4" />
                                 <div className="flex justify-between items-center w-full">
                                     <p className="text-xs text-muted-foreground">
-                                        {userProfile.linkedin}
+                                    {/* {userProfile.linkedin?userProfile.linkedin:'--'} */}
+                                    {userProfile.linkedin?(<a className=" to-blue-300" href={`https://linkedin.com/in/${userProfile.linkedin}`} target="_blank">{userProfile.linkedin}</a>):'--'}
+                                    
                                     </p>
                                     {copiedPlatform === "linkedin" ? (
                                         <Check className="w-4 h-4 ml-2 text-primary" />
@@ -312,7 +415,8 @@ const Profile = () => {
                                 <Github className="w-4 h-4" />
                                 <div className="flex justify-between items-center w-full">
                                     <p className="text-xs text-muted-foreground">
-                                        {userProfile.github}
+                                    {/* {userProfile.github?userProfile.github:'--'} */}
+                                    {userProfile.github?(<a className=" to-blue-300" href={`https://github.com/${userProfile.github}`} target="_blank">{userProfile.github}</a>):'--'}
                                     </p>
                                     {copiedPlatform === "github" ? (
                                         <Check className="w-4 h-4 ml-2 text-primary" />
@@ -333,7 +437,7 @@ const Profile = () => {
                                 <CircleUser className="w-4 h-4" />
                                 <div className="flex justify-between items-center w-full">
                                     <p className="text-xs text-muted-foreground">
-                                        {userProfile.portfolio}
+                                        {userProfile.portfolio?(<a className=" to-blue-300" href={`https://www.${userProfile.portfolio}`} target="_blank">{userProfile.portfolio}</a>):'--'}
                                     </p>
                                     {copiedPlatform === "portfolio" ? (
                                         <Check className="w-4 h-4 ml-2 text-primary" />
@@ -387,25 +491,25 @@ const Profile = () => {
                                         </Label>
                                         <div className="flex gap-2">
                                             <Input
-                                                id="firstName"
-                                                value={updatedProfile.firstName}
+                                                id="first_name"
+                                                value={updatedProfile.first_name}
                                                 placeholder="First Name"
                                                 className="text-xs"
                                                 onChange={(e) =>
                                                     handleInputChange(
-                                                        "firstName",
+                                                        "first_name",
                                                         e.target.value
                                                     )
                                                 }
                                             />
                                             <Input
-                                                id="lastName"
-                                                value={updatedProfile.lastName}
+                                                id="last_name"
+                                                value={updatedProfile.last_name}
                                                 placeholder="Last Name"
                                                 className="text-xs"
                                                 onChange={(e) =>
                                                     handleInputChange(
-                                                        "lastName",
+                                                        "last_name",
                                                         e.target.value
                                                     )
                                                 }
@@ -563,11 +667,11 @@ const Profile = () => {
                     <div className="relative flex flex-col md:flex-row justify-between md:gap-32 items-start bg-background rounded-lg p-4">
                         <div className="flex flex-col gap-2 md:w-1/2">
                             <h2 className="text-sm">Bio</h2>
-                            <p className="text-xs mb-2">{userProfile.bio}</p>
+                            <p className="text-xs mb-2">{userProfile.bio?userProfile.bio:"--"}</p>
                             <div className="flex flex-col gap-2">
                                 <h2 className="text-sm">Interests</h2>
                                 <div className="flex flex-wrap gap-2">
-                                    {userProfile.interests.map(
+                                    {userProfile?.interests.length!=0 ?userProfile?.interests.map(
                                         (interest, idx) => (
                                             <Badge
                                                 key={idx}
@@ -577,7 +681,7 @@ const Profile = () => {
                                                 {interest}
                                             </Badge>
                                         )
-                                    )}
+                                    ):"--"}
                                 </div>
                             </div>
                         </div>
@@ -585,7 +689,7 @@ const Profile = () => {
                             <div className="flex flex-col gap-2 mt-4 md:mt-0">
                                 <h2 className="text-sm">Top Skills</h2>
                                 <div className="flex flex-wrap gap-2">
-                                    {userProfile.skills.map((skill, idx) => (
+                                    {userProfile.skills.length !=0 ?userProfile.skills.map((skill, idx) => (
                                         <Badge
                                             key={idx}
                                             variant="outline"
@@ -593,7 +697,7 @@ const Profile = () => {
                                         >
                                             {skill}
                                         </Badge>
-                                    ))}
+                                    )): "--"}
                                 </div>
                             </div>
 
