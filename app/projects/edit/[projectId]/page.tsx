@@ -18,10 +18,10 @@ const EditProjectPage = () => {
         description: `A chatbot that leverages NLP and machine learning to assist users with common tasks. A chatbot that leverages NLP and machine learning to assist users with common tasks. A chatbot that leverages NLP and machine learning to assist users with common tasks. A chatbot that leverages NLP and machine learning to assist users with common tasks. A chatbot that leverages NLP and machine learning to assist users with common tasks.`,
         github_link: "https://github.com/user/ai-chatbot",
         demo_link: "https://demo.ai-chatbot.com",
-        images: [
+        image: null,
             // "https://cdn.pixabay.com/photo/2018/05/18/15/30/web-design-3411373_1280.jpg",
             // "https://digitalnotebook.in/up/2023/06/Website-design.jpg",
-        ],
+        
         videos: [
             "https://www.youtube.com/watch?v=IENArFXpQD8",
             "https://www.youtube.com/watch?v=IENArFXpQD8",

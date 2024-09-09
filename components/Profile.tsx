@@ -21,6 +21,7 @@ import {
     Edit2,
     Eye,
     ArrowLeft,
+    Loader2,
     Plus,
 } from "lucide-react";
 import { useUser, useAuth } from "@clerk/clerk-react";
@@ -405,7 +406,11 @@ const Profile = () => {
     };
 
     if (loading) {
-        return <p>Loading...</p>; //!Change the loading state
+        return (
+            <div className="flex justify-center items-center h-[75vh]">
+                <Loader2 className="w-20 h-20 text-primary animate-spin" />
+            </div>
+        );
     }
     return (
         <div className="flex flex-col gap-4 items-start mt-4">

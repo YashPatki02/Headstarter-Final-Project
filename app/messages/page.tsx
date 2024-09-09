@@ -15,6 +15,7 @@ import {
     ArrowUpRight,
     Check,
     Linkedin,
+    Loader2,
     Mail,
     X,
 } from "lucide-react";
@@ -164,9 +165,13 @@ const MessagesPage = () => {
                 break;
         }
     };
-    
+
     if (loading) {
-        return <h1>Loading...</h1>;
+        return (
+            <div className="flex justify-center items-center h-[75vh]">
+                <Loader2 className="w-20 h-20 text-primary animate-spin" />
+            </div>
+        );
     }
     return (
         <div className="flex flex-col gap-4 items-start mt-4 mb-20">
