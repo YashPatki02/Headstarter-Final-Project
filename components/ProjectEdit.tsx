@@ -57,12 +57,6 @@ const ProjectEdit: React.FC<ProjectEditProps> = ({ project, onSubmit }) => {
         }
     }, [project]);
 
-    useEffect(() => {
-        if (selectedImages.length < 3) {
-            setImageError({ type: "", error: false });
-        }
-    }, [selectedImages]);
-
     // Handle input change for regular fields
     const handleInputChange = (field: string, value: string | string[]) => {
         setProjectData({ ...projectData, [field]: value });
@@ -75,6 +69,9 @@ const ProjectEdit: React.FC<ProjectEditProps> = ({ project, onSubmit }) => {
 
     const handleAddImage = (event: any) => {
         console.log("IMAGE ", event.target.files[0]);
+
+        // Reset image error state
+        setImageError({ type: "", error: false });
 
         if (event.target.files[0].size > 1024 * 1024) {
             setImageError({ type: "size", error: true });
