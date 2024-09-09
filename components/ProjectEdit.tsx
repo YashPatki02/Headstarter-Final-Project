@@ -28,7 +28,7 @@ const ProjectEdit: React.FC<ProjectEditProps> = ({ project, onSubmit }) => {
         description: "",
         github_link: "",
         demo_link: "",
-        images: [],
+        image: null,
         videos: [],
         status: "open to collaboration",
         collaboration_skills: [],
@@ -49,10 +49,11 @@ const ProjectEdit: React.FC<ProjectEditProps> = ({ project, onSubmit }) => {
         setProjectData({ ...projectData, [field]: tags });
     };
 
-    const handleAddImage = (url: string) => {
+    const handleAddImage = (event: any) => {
+        console.log("IMAGE ", event.target.files[0]);
         setProjectData({
             ...projectData,
-            images: [...projectData.images, url],
+            image: event.target.files[0],
         });
     };
 
@@ -217,47 +218,30 @@ const ProjectEdit: React.FC<ProjectEditProps> = ({ project, onSubmit }) => {
                                         Gallery
                                     </h3>
 
-                                    {/* Images */}
+                                    {/* Image */}
                                     <div className="flex flex-col gap-2">
                                         <Label
-                                            htmlFor="images"
+                                            htmlFor="image"
                                             className="text-xs"
                                         >
                                             Add project images (first will be
                                             thumbnail)
                                         </Label>
                                         <Input
-                                            id="images"
+                                            id="image"
                                             type="file"
                                             placeholder="Add image URL"
                                             className="text-xs"
+                                            accept="image/*"
                                             onKeyDown={(e) => {
                                                 if (e.key === "Enter") {
-                                                    handleAddImage(
-                                                        (
-                                                            e.target as HTMLInputElement
-                                                        ).value
-                                                    );
+                                                    handleAddImage(e);
                                                     (
                                                         e.target as HTMLInputElement
                                                     ).value = "";
                                                 }
                                             }}
                                         />
-                                        <div className="flex flex-wrap gap-2">
-                                            {projectData.images.map(
-                                                (img, index) => (
-                                                    <img
-                                                        key={index}
-                                                        src={img}
-                                                        alt={`Project Image ${
-                                                            index + 1
-                                                        }`}
-                                                        className="h-12 w-12 object-cover rounded"
-                                                    />
-                                                )
-                                            )}
-                                        </div>
                                     </div>
 
                                     {/* Videos */}

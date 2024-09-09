@@ -14,12 +14,17 @@ export async function GET(req: NextRequest) {
     // const supabase = supabaseClient(token);
     const supabase = supabaseClient();
 
-    // Gets user owned projects
+    // Gets user owned projects + user collaborated projects
     try {
+        // const { data, error } = await supabase
+        //     .from("projects")
+        //     .select("*, collaborators!left(*)") // Left join on projects table
+        //     .or(`user_id.eq.${userId}, collaborators.user_id.eq.${userId}`);
+
         const { data, error } = await supabase
-            .from("projects")
-            .select("*, collaborators!left(*)") // Left join on projects table
-            .or(`user_id.eq.${userId}, collaborators.user_id.eq.${userId}`);
+            .from("test0")
+            .select()
+            .or(`user_id.eq.${userId}, collaborator_id.eq.${userId}`);
 
         return NextResponse.json(
             { message: "Successfully fetched user projects", data },
