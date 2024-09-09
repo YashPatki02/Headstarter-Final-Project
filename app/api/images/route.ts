@@ -1,26 +1,31 @@
 import { NextRequest, NextResponse } from "next/server";
 import { supabaseClient } from "@/lib/supabaseClient";
+import { v4 as uuidv4 } from "uuid";
 
 // Upload a new image
 export async function POST(req: NextRequest) {
+    //initialize w token
     const supabase = supabaseClient();
-    const { file, type } = await req.json();
+    const formData = await req.formData();
+    const imageData = formData.get("primaryImage");
 
-    // 1. Get the existing image json (for project count)
-    // 2. Upload the file to storage with correctly indexed file path
-    // 3. Update the image json column
-    let filePath = "/project-id/type/[asset_id]";
+    // 1. Upload the file to storage with correctly indexed file path
+    // 2. Update the image json column
+
+    // Creates unique filepath
+    // let filePath = `${file}-${uuidv4()}`;
     try {
-        const { data, error } = await supabase.storage
-            .from("profile-images")
-            .upload(filePath, file);
+        // const { data, error } = await supabase.storage
+        //     .from("profile-images")
+        //     .upload(filePath, file);
+        console.log(imageData);
         return NextResponse.json(
-            { message: `Successfully uploaded ${type} image`, data },
+            { message: `Successfully uploaded image`, imageData },
             { status: 201 }
         );
     } catch (error: any) {
         return NextResponse.json(
-            { message: `Error uploading ${type} image`, error },
+            { message: `Error uploading image`, error },
             { status: 500 }
         );
     }

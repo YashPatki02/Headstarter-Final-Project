@@ -84,6 +84,16 @@ const Profile = () => {
         archived: false,
     });
 
+    // This state can be part of the larger project state
+    const [images, setImages] = useState({
+        primary: null,
+        gallery: { 1: null, 2: null, 3: null },
+    });
+
+    useEffect(() => {
+        console.log(images);
+    }, [images]);
+
     const toggleTabCollapse = (tabName: ProjectTabTypes) => {
         setTabCollapsed((prevState) => ({
             ...prevState,
@@ -324,19 +334,35 @@ const Profile = () => {
         setShowPassword((prev) => !prev);
     };
 
-    const uploadImage = async (filePath: string, type: string) => {
+    const handleOnChangeFile = (
+        event: any,
+        type: string,
+        galleryIndex: number
+    ) => {
+        if (type === "primary")
+            setImages({ ...images, primary: event.target.files[0] });
+        else if (type === "gallery") {
+            setImages({
+                ...images,
+                gallery: {
+                    ...images.gallery,
+                    [galleryIndex]: "",
+                },
+            });
+        }
+    };
+
+    const uploadImage = async () => {
         const token = await getToken({ template: "supabase" });
+        const formData = new FormData();
+        formData.append("primaryImage", images?.primary ?? "");
         try {
             const response = await fetch("/api/images", {
                 method: "POST",
                 headers: {
-                    "Content-Type": "application/json",
                     Authentication: `Bearer ${token}`,
                 },
-                body: JSON.stringify({
-                    filePath: filePath,
-                    type: type,
-                }),
+                body: formData,
             });
 
             const data = await response.json();
@@ -345,6 +371,11 @@ const Profile = () => {
             console.error("Error checking user in Supabase:", error);
         }
     };
+
+    const handleSubmitNewProject = async () => {
+        uploadImage();
+    };
+
     if (loading) {
         return <p>Loading...</p>; //!Change the loading state
     }
@@ -495,7 +526,7 @@ const Profile = () => {
                                         {userProfile?.portfolio ? (
                                             <a
                                                 className=" to-blue-300"
-                                                href={`https://www.${userProfil?.portfolio}`}
+                                                href={`https://www.${userProfile?.portfolio}`}
                                                 target="_blank"
                                             >
                                                 {userProfile?.portfolio}
@@ -964,7 +995,13 @@ const Profile = () => {
                     {/* Change the name of these labels? */}
                     <div className="flex flex-row">
                         <h3>Primary Image: </h3>
-                        <input type="file" accept="image/*" />
+                        <input
+                            onChange={(event) =>
+                                handleOnChangeFile(event, "primary", 0)
+                            }
+                            type="file"
+                            accept="image/*"
+                        />
                     </div>
                     <div className="flex flex-row">
                         <h3>Other Images: </h3>
@@ -997,6 +1034,9 @@ const Profile = () => {
                         <h2>Would you like to archive this project?</h2>
                         <input type="checkbox" value="yes" />
                     </div>
+                    <button onClick={handleSubmitNewProject}>
+                        Create Project
+                    </button>
                 </div>
             )}
             {tab === "editProject"}
