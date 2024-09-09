@@ -296,7 +296,7 @@ const ProjectEdit: React.FC<ProjectEditProps> = ({ project, onSubmit }) => {
                                             id="image"
                                             type="file"
                                             placeholder="Add image URL"
-                                            className="text-xs"
+                                            className="text-xs hidden"
                                             accept="image/*"
                                             // onKeyDown={(e) => {
                                             //     if (e.key === "Enter") {
@@ -310,7 +310,59 @@ const ProjectEdit: React.FC<ProjectEditProps> = ({ project, onSubmit }) => {
                                                 handleAddImage(e);
                                             }}
                                         />
-                                        
+                                        <div className="flex flex-col gap-2">
+                                            <Label
+                                                htmlFor="image"
+                                                className="flex text-xs items-center justify-center cursor-pointer p-6 w-full border-dotted border-2 rounded-md"
+                                            >
+                                                <UploadIcon className="w-4 h-4 mr-2" />{" "}
+                                                {/* Lucide Upload Icon */}
+                                                Upload Thumbnail Image
+                                            </Label>
+                                            <p className="text-xs text-gray-400 ml-auto mr-2">
+                                                <span
+                                                    className={`${
+                                                        imageError &&
+                                                        imageError.type ===
+                                                            "size"
+                                                            ? "text-red-500 text-sm"
+                                                            : ""
+                                                    }`}
+                                                >
+                                                    Max size 1 mb.
+                                                </span>{" "}
+                                            </p>
+                                        </div>
+
+                                        <div className="flex flex-wrap gap-2 w-1/2">
+                                            {projectData.image && (
+                                                <div className="flex relative">
+                                                    <Image
+                                                        src={URL.createObjectURL(
+                                                            projectData.image
+                                                        )}
+                                                        width={283}
+                                                        height={200}
+                                                        alt={`Selected Image`}
+                                                        className="rounded-lg self-center object-center"
+                                                    />
+
+                                                    <Button
+                                                        className="absolute -top-3 -right-3 rounded-full"
+                                                        size="icon"
+                                                        variant="outline"
+                                                        onClick={() => {
+                                                            setProjectData({
+                                                                ...projectData,
+                                                                image: null,
+                                                            });
+                                                        }}
+                                                    >
+                                                        <X className="w-4 h-4" />
+                                                    </Button>
+                                                </div>
+                                            )}
+                                        </div>
                                     </div>
 
                                     {/* Videos */}
