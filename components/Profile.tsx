@@ -616,10 +616,7 @@ const Profile = () => {
                                             <Input
                                                 id="first_name"
                                                 value={
-                                                    updatedProfile.first_name
-                                                }
-                                                value={
-                                                    updatedProfile.first_name
+                                                    updatedProfile?.first_name
                                                 }
                                                 placeholder="First Name"
                                                 className="text-xs"
