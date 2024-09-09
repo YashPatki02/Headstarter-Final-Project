@@ -233,13 +233,16 @@ const ProjectEdit: React.FC<ProjectEditProps> = ({ project, onSubmit }) => {
                                             placeholder="Add image URL"
                                             className="text-xs"
                                             accept="image/*"
-                                            onKeyDown={(e) => {
-                                                if (e.key === "Enter") {
-                                                    handleAddImage(e);
-                                                    (
-                                                        e.target as HTMLInputElement
-                                                    ).value = "";
-                                                }
+                                            // onKeyDown={(e) => {
+                                            //     if (e.key === "Enter") {
+                                            //         handleAddImage(e);
+                                            //         (
+                                            //             e.target as HTMLInputElement
+                                            //         ).value = "";
+                                            //     }
+                                            // }}
+                                            onChange={(e) => {
+                                                handleAddImage(e);
                                             }}
                                         />
                                     </div>

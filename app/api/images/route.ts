@@ -3,33 +3,46 @@ import { supabaseClient } from "@/lib/supabaseClient";
 import { v4 as uuidv4 } from "uuid";
 
 // Upload a new image
-export async function POST(req: NextRequest) {
-    //initialize w token
-    const supabase = supabaseClient();
-    const formData = await req.formData();
-    const imageData = formData.get("primaryImage");
+// export async function POST(req: NextRequest) {
+//     //initialize w token
+//     const supabase = supabaseClient();
+//     const formData = await req.formData();
+//     const imageData = formData.get("primaryImage");
 
-    // 1. Upload the file to storage with correctly indexed file path
-    // 2. Update the image json column
+//     // 1. Upload the file to storage with correctly indexed file path
+//     // 2. Update the image json column
 
-    // Creates unique filepath
-    // let filePath = `${file}-${uuidv4()}`;
-    try {
-        // const { data, error } = await supabase.storage
-        //     .from("profile-images")
-        //     .upload(filePath, file);
-        console.log(imageData);
-        return NextResponse.json(
-            { message: `Successfully uploaded image`, imageData },
-            { status: 201 }
-        );
-    } catch (error: any) {
-        return NextResponse.json(
-            { message: `Error uploading image`, error },
-            { status: 500 }
-        );
-    }
-}
+//     // Creates unique filepath
+//     // let filePath = `${file}-${uuidv4()}`;
+//     try {
+//         // const { data, error } = await supabase.storage
+//         //     .from("profile-images")
+//         //     .upload(filePath, file);
+//         console.log(imageData);
+//         return NextResponse.json(
+//             { message: `Successfully uploaded image`, imageData },
+//             { status: 201 }
+//         );
+//     } catch (error: any) {
+//         return NextResponse.json(
+//             { message: `Error uploading image`, error },
+//             { status: 500 }
+//         );
+//     }
+// }
+
+// // Given supabase client and file data, upload an image to supabase storage
+// async function uploadImage(supabase: any, file: File) {
+//     let filePath = `${uuidv4()}-${file.name}`;
+//     try {
+//         const { data, error } = await supabase.storage
+//             .from("profile-images")
+//             .upload(filePath, file);
+//         return data;
+//     } catch (error: any) {
+//         console.log("Error uploading image to storage: ", error);
+//     }
+// }
 
 // Fetch an image url
 export async function GET(req: NextRequest) {}
