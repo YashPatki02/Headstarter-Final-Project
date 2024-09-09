@@ -9,7 +9,7 @@ const PitchesPage = () => {
             </div>
 
             <div className="flex flex-col gap-2 w-full">
-                <div className="relative flex flex-col h-[65vh] mt-4 sm:mt-0 gap-4 justify-center items-center sm:items-center bg-background rounded-lg p-4">
+                <div className="relative flex flex-col h-[65vh] mt-4 mb-6 sm:mt-0 gap-4 justify-center items-center sm:items-center bg-background rounded-lg p-4">
                     <h1 className="text-4xl text-primary">
                         pitches coming soon!
                     </h1>
