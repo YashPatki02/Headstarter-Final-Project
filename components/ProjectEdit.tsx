@@ -290,8 +290,7 @@ const ProjectEdit: React.FC<ProjectEditProps> = ({ project, onSubmit }) => {
                                             htmlFor="image"
                                             className="text-xs"
                                         >
-                                            Add project images (first will be
-                                            thumbnail)
+                                            Add project thumbnail
                                         </Label>
                                         <Input
                                             id="image"
