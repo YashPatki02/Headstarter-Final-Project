@@ -32,7 +32,7 @@ const ProjectEdit: React.FC<ProjectEditProps> = ({ project, onSubmit }) => {
         description: "",
         github_link: "",
         demo_link: "",
-        images: [],
+        image: null,
         videos: [],
         status: "open to collaboration",
         collaboration_skills: [],
@@ -73,25 +73,14 @@ const ProjectEdit: React.FC<ProjectEditProps> = ({ project, onSubmit }) => {
         setProjectData({ ...projectData, [field]: tags });
     };
 
-    // Handle adding images locally without uploading them
-    const handleAddImage = (files: File[]) => {
-        setImageError({ type: "", error: false });
-        const validFiles = files.filter((file) => file.size <= 1024 * 1024); // Ensure files are under 1MB
-
-        if (validFiles.length === 0) {
-            setImageError({ type: "size", error: true });
-            return;
-        }
-
-        if (selectedImages.length + validFiles.length > 3) {
-            setImageError({ type: "count", error: true });
-            return;
-        }
-
-        setSelectedImages((prevImages) => [...prevImages, ...validFiles]);
+    const handleAddImage = (event: any) => {
+        console.log("IMAGE ", event.target.files[0]);
+        setProjectData({
+            ...projectData,
+            image: event.target.files[0],
+        });
     };
 
-    // Handle adding video URLs locally
     const handleAddVideo = (url: string) => {
         setVideoError(false);
         if (url.trim() === "" || !url.includes("youtube.com")) {
@@ -289,109 +278,33 @@ const ProjectEdit: React.FC<ProjectEditProps> = ({ project, onSubmit }) => {
                                         Gallery
                                     </h3>
 
-                                    {/* Images */}
+                                    {/* Image */}
                                     <div className="flex flex-col gap-2">
                                         <Label
-                                            htmlFor="images"
+                                            htmlFor="image"
                                             className="text-xs"
                                         >
                                             Add project images (first will be
                                             thumbnail)
                                         </Label>
-
-                                        <div className="flex flex-col items-end justify-start gap-2">
-                                            <Input
-                                                id="images"
-                                                type="file"
-                                                accept="image/*"
-                                                placeholder="Upload Images"
-                                                className="text-xs hidden"
-                                                onChange={(e) => {
-                                                    const files = Array.from(
-                                                        e.target.files || []
-                                                    );
-                                                    handleAddImage(files);
-                                                    e.target.value = "";
-                                                }}
-                                            />
-
-                                            <Label
-                                                htmlFor="images"
-                                                className="flex items-center justify-center cursor-pointer p-6 w-full border-dotted border-2 rounded-md"
-                                            >
-                                                <UploadIcon className="mr-2" />{" "}
-                                                {/* Lucide Upload Icon */}
-                                                Upload Images
-                                            </Label>
-                                            <p className="text-xs text-gray-400 mr-2">
-                                                <span
-                                                    className={`${
-                                                        imageError &&
-                                                        imageError.type ===
-                                                            "size"
-                                                            ? "text-red-500 text-sm"
-                                                            : ""
-                                                    }`}
-                                                >
-                                                    Max size 1 mb.
-                                                </span>{" "}
-                                                <span
-                                                    className={`${
-                                                        imageError &&
-                                                        imageError.type ===
-                                                            "count"
-                                                            ? "text-red-500 text-sm"
-                                                            : ""
-                                                    }`}
-                                                >
-                                                    {selectedImages.length}/3
-                                                    images.
-                                                </span>
-                                            </p>
-                                        </div>
-
-                                        {/* Preview selected images */}
-                                        <div className="flex flex-wrap gap-2 mt-2">
-                                            {selectedImages.map(
-                                                (imgFile, index) => (
-                                                    <div
-                                                        key={index}
-                                                        className="relative  w-1/4 rounded-lg"
-                                                    >
-                                                        <Image
-                                                            src={URL.createObjectURL(
-                                                                imgFile
-                                                            )}
-                                                            width={283}
-                                                            height={200}
-                                                            alt={`Selected Image ${
-                                                                index + 1
-                                                            }`}
-                                                            className="rounded-lg self-center object-center"
-                                                        />
-                                                        <Button
-                                                            className="absolute -top-3 -right-3 rounded-full"
-                                                            size="icon"
-                                                            variant="outline"
-                                                            onClick={() => {
-                                                                setSelectedImages(
-                                                                    selectedImages.filter(
-                                                                        (
-                                                                            _,
-                                                                            i
-                                                                        ) =>
-                                                                            i !==
-                                                                            index
-                                                                    )
-                                                                ); // Remove image from selected list
-                                                            }}
-                                                        >
-                                                            <X className="w-4 h-4" />
-                                                        </Button>
-                                                    </div>
-                                                )
-                                            )}
-                                        </div>
+                                        <Input
+                                            id="image"
+                                            type="file"
+                                            placeholder="Add image URL"
+                                            className="text-xs"
+                                            accept="image/*"
+                                            // onKeyDown={(e) => {
+                                            //     if (e.key === "Enter") {
+                                            //         handleAddImage(e);
+                                            //         (
+                                            //             e.target as HTMLInputElement
+                                            //         ).value = "";
+                                            //     }
+                                            // }}
+                                            onChange={(e) => {
+                                                handleAddImage(e);
+                                            }}
+                                        />
                                     </div>
 
                                     {/* Videos */}

@@ -14,7 +14,7 @@ export type ProjectType = {
     description: string;
     github_link: string;
     demo_link: string;
-    images: string[];
+    image: File | null;
     videos: string[];
     status: string;
     collaboration_skills?: string[];
