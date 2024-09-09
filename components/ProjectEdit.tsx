@@ -142,7 +142,7 @@ const ProjectEdit: React.FC<ProjectEditProps> = ({ project, onSubmit }) => {
                         <div className="relative flex flex-col mt-4 sm:mt-0 justify-between items-start sm:items-center">
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 py-4 w-full">
                                 <div className="flex flex-col gap-4 w-full bg-background rounded-lg p-4">
-                                    <h3 className="text-lg font-semibold">
+                                    <h3 className="text-sm text-muted-foreground">
                                         Project Details
                                     </h3>
                                     {/* Project Name */}
@@ -179,7 +179,7 @@ const ProjectEdit: React.FC<ProjectEditProps> = ({ project, onSubmit }) => {
                                             id="description"
                                             value={projectData.description}
                                             placeholder="Describe the project"
-                                            className="text-xs h-12 max-h-24"
+                                            className="text-xs h-12 max-h-40"
                                             onChange={(e) =>
                                                 handleInputChange(
                                                     "description",
@@ -274,7 +274,7 @@ const ProjectEdit: React.FC<ProjectEditProps> = ({ project, onSubmit }) => {
                                 </div>
 
                                 <div className="flex flex-col gap-4 w-full bg-background rounded-lg p-4">
-                                    <h3 className="text-lg font-semibold">
+                                    <h3 className="text-sm text-muted-foreground">
                                         Gallery
                                     </h3>
 
@@ -387,7 +387,7 @@ const ProjectEdit: React.FC<ProjectEditProps> = ({ project, onSubmit }) => {
                                 </div>
 
                                 <div className="flex flex-col gap-4 w-full bg-background rounded-lg p-4">
-                                    <h3 className="text-lg font-semibold">
+                                    <h3 className="text-sm text-muted-foreground">
                                         Status
                                     </h3>
 
