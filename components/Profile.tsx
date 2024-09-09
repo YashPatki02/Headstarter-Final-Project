@@ -50,6 +50,7 @@ const Profile = () => {
     const { getToken } = useAuth();
     const { user } = useUser();
     const [loading, setLoading] = useState(true);
+
     useEffect(() => {
         const getUserData = async () => {
             try {
@@ -228,42 +229,46 @@ const Profile = () => {
         interests: [],
     });
     const [updatedProfile, setUpdatedProfile] = useState({ ...userProfile });
-    const getChangedFields = () => {
-        const changes: Partial<UserProfile> = {};
+    const [changedFields, setChangedFields] = useState<Partial<UserProfile>>(
+        {}
+    );
 
-        Object.keys(updatedProfile).forEach((key) => {
-            const originalValue = userProfile[key as keyof UserProfile];
-            const updatedValue = updatedProfile[key as keyof UserProfile];
+    // const getChangedFields = () => {
+    //     const changes: Partial<UserProfile> = {};
 
-            // Check if both values are arrays
-            if (Array.isArray(originalValue) && Array.isArray(updatedValue)) {
-                // Compare array lengths and contents
-                if (
-                    originalValue.length !== updatedValue.length ||
-                    !originalValue.every(
-                        (val, idx) => val === updatedValue[idx]
-                    )
-                ) {
-                    changes[key as keyof UserProfile] = updatedValue; // Add array to changes if different
-                }
-            }
-            // If both values are strings
-            else if (
-                typeof originalValue === "string" &&
-                typeof updatedValue === "string"
-            ) {
-                if (originalValue !== updatedValue) {
-                    changes[key as keyof UserProfile] = updatedValue; // Add string to changes if different
-                }
-            }
-        });
+    //     Object.keys(updatedProfile).forEach((key) => {
+    //         const originalValue = userProfile[key as keyof UserProfile];
+    //         const updatedValue = updatedProfile[key as keyof UserProfile];
 
-        return changes;
-    };
+    //         // Check if both values are arrays
+    //         if (Array.isArray(originalValue) && Array.isArray(updatedValue)) {
+    //             // Compare array lengths and contents
+    //             if (
+    //                 originalValue.length !== updatedValue.length ||
+    //                 !originalValue.every(
+    //                     (val, idx) => val === updatedValue[idx]
+    //                 )
+    //             ) {
+    //                 changes[key as keyof UserProfile] = updatedValue; // Add array to changes if different
+    //             }
+    //         }
+    //         // If both values are strings
+    //         else if (
+    //             typeof originalValue === "string" &&
+    //             typeof updatedValue === "string"
+    //         ) {
+    //             if (originalValue !== updatedValue) {
+    //                 changes[key as keyof UserProfile] = [updatedValue]; // Add string to changes if different
+    //             }
+    //         }
+    //     });
+
+    //     return changes;
+    // };
 
     const handleInputChange = (field: string, value: string) => {
         setUpdatedProfile((prevUser) => {
-            console.log(field, value);
+            // console.log(field, value);
             if (field == "bio") {
                 return {
                     ...prevUser,
@@ -276,6 +281,13 @@ const Profile = () => {
                 };
             }
         });
+
+        setChangedFields((prevFields) => {
+            return {
+                ...prevFields,
+                [field]: value,
+            };
+        });
     };
 
     const handleTagsChange = (field: string, tags: string[]) => {
@@ -285,14 +297,28 @@ const Profile = () => {
                 [field]: tags,
             };
         });
+
+        setChangedFields((prevFields) => {
+            return {
+                ...prevFields,
+                [field]: tags,
+            };
+        });
     };
 
     const handleSave = async () => {
-        // update the backend
+        Object.keys(changedFields).forEach((key) => {
+            const typedKey = key as keyof UserProfile;
+            if (updatedProfile[typedKey] === userProfile[typedKey]) {
+                delete changedFields[typedKey];
+            }
+        });
+
         console.log(updatedProfile);
-        const changes = getChangedFields();
-        console.log(changes);
-        if (Object.keys(changes).length > 0) {
+        // const changes = getChangedFields();
+        // console.log("changes", changes);
+        console.log(changedFields);
+        if (Object.keys(changedFields).length > 0) {
             try {
                 const token = await getToken({ template: "supabase" });
                 const res = await fetch("/api/profile", {
@@ -301,7 +327,7 @@ const Profile = () => {
                         "Content-Type": "application/json",
                         Authorization: `Bearer ${token}`,
                     },
-                    body: JSON.stringify(changes), // Send only changed fields
+                    body: JSON.stringify(changedFields),
                 });
 
                 if (res.ok) {
@@ -309,7 +335,7 @@ const Profile = () => {
                     console.log("Profile updated successfully", data);
                     setUserProfile((prevProfile) => ({
                         ...prevProfile,
-                        ...changes,
+                        ...changedFields,
                     })); // Update the original profile
                 } else {
                     console.error(
@@ -324,7 +350,8 @@ const Profile = () => {
         } else {
             console.log("No changes to update");
         }
-        //   setUserProfile({ ...updatedProfile });
+        // setUserProfile({ ...updatedProfile });
+        setChangedFields({});
         setShowPassword(false);
     };
 
@@ -588,6 +615,9 @@ const Profile = () => {
                                         <div className="flex gap-2">
                                             <Input
                                                 id="first_name"
+                                                value={
+                                                    updatedProfile.first_name
+                                                }
                                                 value={
                                                     updatedProfile.first_name
                                                 }

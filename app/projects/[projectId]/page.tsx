@@ -24,10 +24,36 @@ import { Badge } from "@/components/ui/badge";
 import Image from "next/image";
 import { useUser } from "@clerk/nextjs";
 import { STATUS_MAP } from "@/lib/constants";
+import {
+    Dialog,
+    DialogContent,
+    DialogDescription,
+    DialogFooter,
+    DialogHeader,
+    DialogTitle,
+    DialogTrigger,
+} from "@/components/ui/dialog";
+import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/input";
+import {
+    Select,
+    SelectContent,
+    SelectGroup,
+    SelectItem,
+    SelectLabel,
+    SelectTrigger,
+    SelectValue,
+} from "@/components/ui/select";
+import { useRouter } from "next/navigation";
 
 const IndividualProject = () => {
-    const { projectId: projectId } = useParams();
-    const { user } = useUser();
+    const { projectId } = useParams();
+    const router = useRouter();
+    // const { user } = useUser();
+    const user = {
+        id: "101",
+    };
+
     const [userOwner, setUserOwner] = useState(false);
     const avatarUrls = [
         {
@@ -83,8 +109,17 @@ const IndividualProject = () => {
         }
     }, [user, project]);
 
+    const [updatedMessage, setUpdatedMessage] = useState({
+        message: "",
+        platform: "",
+    });
+
+    const handleInputChange = (key: string, value: string) => {
+        setUpdatedMessage((prev) => ({ ...prev, [key]: value }));
+    };
+
     return (
-        <div className="flex flex-col gap-4 items-start mt-4 mb-20">
+        <div className="flex flex-col gap-4 items-start mt-4 mb-20 ">
             <div className="flex justify-between items-center w-full mb-2">
                 <div className="flex flex-col w-full gap-4">
                     <div className="flex sm:mr-6 items-center justify-between">
@@ -97,7 +132,9 @@ const IndividualProject = () => {
                                 className="font-normal flex items-center gap-2 bg-background text-sm"
                             >
                                 <div
-                                    className={`h-2 w-2 mr-1 rounded-full ${STATUS_MAP[project.status].color}`}
+                                    className={`h-2 w-2 mr-1 rounded-full ${
+                                        STATUS_MAP[project.status].color
+                                    }`}
                                 ></div>
                                 {STATUS_MAP[project.status].text}
                             </Badge>
@@ -115,9 +152,16 @@ const IndividualProject = () => {
                                             options
                                         </DropdownMenuLabel>
                                         <DropdownMenuSeparator />
-                                        <DropdownMenuItem>
+                                        <DropdownMenuItem
+                                            onClick={() => {
+                                                router.push(
+                                                    `/projects/edit/${projectId}`
+                                                );
+                                            }}
+                                        >
                                             edit.
                                         </DropdownMenuItem>
+
                                         <DropdownMenuItem>
                                             <div className="flex flex-col items-start">
                                                 change status:
@@ -190,17 +234,160 @@ const IndividualProject = () => {
                             </div>
                         </div>
 
-                        {!userOwner && project.status === "open to collaboration" && (
-                            <Button asChild className="sm:mr-6">
-                                <Link href="/projects">
-                                    send collab request
-                                    <GitPullRequest
-                                        size={16}
-                                        className="ml-2"
-                                    />
-                                </Link>
-                            </Button>
-                        )}
+                        {!userOwner &&
+                            project.status === "open to collaboration" && (
+                                <Dialog>
+                                    <DialogTrigger asChild>
+                                        <Button
+                                            asChild
+                                            className="sm:mr-6 cursor-pointer"
+                                            variant="outline"
+                                            onClick={() =>
+                                                setUpdatedMessage({
+                                                    message: "",
+                                                    platform: "",
+                                                })
+                                            }
+                                        >
+                                            <div className="flex items-center gap-2 text-primary border-primary">
+                                                send collab request
+                                                <GitPullRequest size={16} />
+                                            </div>
+                                        </Button>
+                                    </DialogTrigger>
+                                    <DialogContent className="sm:max-w-[425px]">
+                                        <DialogHeader>
+                                            <DialogTitle>
+                                                send collaboration request
+                                            </DialogTitle>
+                                            <DialogDescription>
+                                                Send a request to collaborate on
+                                                this project.
+                                            </DialogDescription>
+                                        </DialogHeader>
+                                        <div className="flex flex-col gap-4 py-4">
+                                            <div className="flex flex-col gap-1">
+                                                <Label
+                                                    htmlFor="message"
+                                                    className="text-xs"
+                                                >
+                                                    Message
+                                                </Label>
+                                                <div className="flex gap-2 items-end">
+                                                    <Input
+                                                        id="message"
+                                                        value={
+                                                            updatedMessage.message
+                                                        }
+                                                        maxLength={50}
+                                                        placeholder="Message"
+                                                        className="text-xs"
+                                                        onChange={(e) =>
+                                                            handleInputChange(
+                                                                "message",
+                                                                e.target.value
+                                                            )
+                                                        }
+                                                    />
+                                                    <p className="text-xs text-muted-foreground">
+                                                        {50 -
+                                                            updatedMessage
+                                                                .message.length}
+                                                    </p>
+                                                </div>
+                                            </div>
+
+                                            {/* Username */}
+                                            <div className="flex flex-col gap-1">
+                                                <Label
+                                                    htmlFor="platform"
+                                                    className="text-xs"
+                                                >
+                                                    Select a platform to provide
+                                                    more details
+                                                </Label>
+                                                <div className="flex gap-2 items-center">
+                                                    <Select
+                                                        value={
+                                                            updatedMessage.platform
+                                                        }
+                                                        onValueChange={(
+                                                            value
+                                                        ) =>
+                                                            handleInputChange(
+                                                                "platform",
+                                                                value
+                                                            )
+                                                        }
+                                                    >
+                                                        <SelectTrigger className="w-1/2 text-xs">
+                                                            <SelectValue placeholder="Select a platform" />
+                                                        </SelectTrigger>
+                                                        <SelectContent>
+                                                            <SelectGroup>
+                                                                <SelectLabel className="text-xs">
+                                                                    Platform
+                                                                </SelectLabel>
+                                                                <SelectItem
+                                                                    className="text-xs"
+                                                                    value="email"
+                                                                >
+                                                                    Email
+                                                                </SelectItem>
+                                                                <SelectItem
+                                                                    className="text-xs"
+                                                                    value="linkedin"
+                                                                >
+                                                                    LinkedIn
+                                                                </SelectItem>
+                                                                <SelectItem
+                                                                    className="text-xs"
+                                                                    value="discord"
+                                                                >
+                                                                    Discord
+                                                                </SelectItem>
+                                                            </SelectGroup>
+                                                        </SelectContent>
+                                                    </Select>
+                                                    {updatedMessage.platform !==
+                                                        "" && (
+                                                        <Button
+                                                            asChild
+                                                            variant="outline"
+                                                        >
+                                                            <Link
+                                                                href="google.com"
+                                                                target="_blank"
+                                                                className="text-xs"
+                                                            >
+                                                                open link
+                                                                <ArrowUpRight
+                                                                    size={16}
+                                                                    className="ml-2"
+                                                                />
+                                                            </Link>
+                                                        </Button>
+                                                    )}
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <DialogFooter>
+                                            <Button
+                                                type="submit"
+                                                onClick={() => {
+                                                    console.log(updatedMessage);
+                                                    setUpdatedMessage({
+                                                        message: "",
+                                                        platform: "",
+                                                    });
+                                                }}
+                                            >
+                                                send message
+                                            </Button>
+                                        </DialogFooter>
+                                    </DialogContent>
+                                </Dialog>
+                            )}
                     </div>
                     <div className="flex items-center gap-8">
                         <p className="text-xs text-muted-foreground">
@@ -247,13 +434,6 @@ const IndividualProject = () => {
             <div className="flex flex-col gap-4 w-full">
                 <p className="text-xs text-muted-foreground">Gallery</p>
                 <div className="grid grid-flow-row-dense grid-cols-1 sm:grid-cols-2 gap-4">
-                    {/* <HeroVideoDialog
-                        className="dark:hidden block"
-                        animationStyle="from-center"
-                        videoSrc="https://www.youtube.com/embed/xrdT2mm-dio?si=BaHAZmegi_d85Q1o"
-                        thumbnailSrc="https://startup-template-sage.vercel.app/hero-light.png"
-                        thumbnailAlt="Project Video"
-                    /> */}
                     {project.images?.map((image, idx) => (
                         <Image
                             key={idx}
