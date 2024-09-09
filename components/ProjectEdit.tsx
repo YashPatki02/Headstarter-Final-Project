@@ -15,6 +15,10 @@ import {
 } from "@/components/ui/select";
 import { STATUS_MAP } from "@/lib/constants";
 import { ProjectType } from "@/lib/types";
+import { Link2, UploadIcon, X } from "lucide-react";
+import Image from "next/image";
+import { Button } from "./ui/button";
+import Link from "next/link";
 
 type ProjectEditProps = {
     project?: ProjectType; // Optional project prop for editing
@@ -34,6 +38,18 @@ const ProjectEdit: React.FC<ProjectEditProps> = ({ project, onSubmit }) => {
         collaboration_skills: [],
     });
 
+    // Local state for storing selected files and image errors
+    const [imageError, setImageError] = useState<{
+        type: string;
+        error: boolean;
+    }>({
+        type: "",
+        error: false,
+    });
+    const [videoError, setVideoError] = useState<boolean>(false);
+    const [selectedImages, setSelectedImages] = useState<File[]>([]);
+    const [selectedVideos, setSelectedVideos] = useState<string[]>([]); // Store video URLs locally
+
     // If a project is passed, prefill the form
     useEffect(() => {
         if (project) {
@@ -41,30 +57,86 @@ const ProjectEdit: React.FC<ProjectEditProps> = ({ project, onSubmit }) => {
         }
     }, [project]);
 
+    useEffect(() => {
+        if (selectedImages.length < 3) {
+            setImageError({ type: "", error: false });
+        }
+    }, [selectedImages]);
+
+    // Handle input change for regular fields
     const handleInputChange = (field: string, value: string | string[]) => {
         setProjectData({ ...projectData, [field]: value });
     };
 
+    // Handle tech stack or skills tags change
     const handleTagsChange = (field: string, tags: string[]) => {
         setProjectData({ ...projectData, [field]: tags });
     };
 
-    const handleAddImage = (url: string) => {
-        setProjectData({
-            ...projectData,
-            images: [...projectData.images, url],
-        });
+    // Handle adding images locally without uploading them
+    const handleAddImage = (files: File[]) => {
+        setImageError({ type: "", error: false });
+        const validFiles = files.filter((file) => file.size <= 1024 * 1024); // Ensure files are under 1MB
+
+        if (validFiles.length === 0) {
+            setImageError({ type: "size", error: true });
+            return;
+        }
+
+        if (selectedImages.length + validFiles.length > 3) {
+            setImageError({ type: "count", error: true });
+            return;
+        }
+
+        setSelectedImages((prevImages) => [...prevImages, ...validFiles]);
     };
 
+    // Handle adding video URLs locally
     const handleAddVideo = (url: string) => {
-        setProjectData({
-            ...projectData,
-            videos: [...projectData.videos, url],
-        });
+        setVideoError(false);
+        if (url.trim() === "" || !url.includes("youtube.com")) {
+            setVideoError(true);
+            return;
+        }
+        setSelectedVideos((prevVideos) => [...prevVideos, url]);
     };
 
-    const handleSubmit = () => {
-        onSubmit(projectData); // Call the onSubmit function passed as a prop
+    // Handle the form submission: upload images and update project data
+    const handleSubmit = async () => {
+        try {
+            const uploadedImages: string[] = [];
+
+            // Upload selected images to Supabase (or any storage service) during form submission
+            for (const file of selectedImages) {
+                const fileName = `${Date.now()}_${file.name}`; // Generate unique file name
+
+                // Upload image to Supabase bucket
+                // const { data, error } = await supabase.storage
+                //     .from("your-bucket-name")
+                //     .upload(`public/${fileName}`, file);
+
+                // if (error) {
+                //     console.error("Error uploading image:", error);
+                //     return;
+                // }
+
+                // Get the public URL of the uploaded image
+                const publicURL = `https://your-supabase-url.com/storage/v1/object/public/${fileName}`;
+                uploadedImages.push(publicURL); // Add the public URL to the array
+            }
+
+            // Update projectData with the uploaded image URLs and selected video URLs
+            const updatedProjectData = {
+                ...projectData,
+                images: uploadedImages,
+                videos: selectedVideos, // Use local state for videos
+            };
+
+            // Call the onSubmit function passed as a prop with the updated data
+            onSubmit(updatedProjectData);
+        } catch (err) {
+            console.error("Error submitting project data:", err);
+        }
     };
 
     return (
@@ -226,35 +298,97 @@ const ProjectEdit: React.FC<ProjectEditProps> = ({ project, onSubmit }) => {
                                             Add project images (first will be
                                             thumbnail)
                                         </Label>
-                                        <Input
-                                            id="images"
-                                            type="file"
-                                            placeholder="Add image URL"
-                                            className="text-xs"
-                                            onKeyDown={(e) => {
-                                                if (e.key === "Enter") {
-                                                    handleAddImage(
-                                                        (
-                                                            e.target as HTMLInputElement
-                                                        ).value
+
+                                        <div className="flex flex-col items-end justify-start gap-2">
+                                            <Input
+                                                id="images"
+                                                type="file"
+                                                accept="image/*"
+                                                placeholder="Upload Images"
+                                                className="text-xs hidden"
+                                                onChange={(e) => {
+                                                    const files = Array.from(
+                                                        e.target.files || []
                                                     );
-                                                    (
-                                                        e.target as HTMLInputElement
-                                                    ).value = "";
-                                                }
-                                            }}
-                                        />
-                                        <div className="flex flex-wrap gap-2">
-                                            {projectData.images.map(
-                                                (img, index) => (
-                                                    <img
+                                                    handleAddImage(files);
+                                                    e.target.value = "";
+                                                }}
+                                            />
+
+                                            <Label
+                                                htmlFor="images"
+                                                className="flex items-center justify-center cursor-pointer p-6 w-full border-dotted border-2 rounded-md"
+                                            >
+                                                <UploadIcon className="mr-2" />{" "}
+                                                {/* Lucide Upload Icon */}
+                                                Upload Images
+                                            </Label>
+                                            <p className="text-xs text-gray-400 mr-2">
+                                                <span
+                                                    className={`${
+                                                        imageError &&
+                                                        imageError.type ===
+                                                            "size"
+                                                            ? "text-red-500 text-sm"
+                                                            : ""
+                                                    }`}
+                                                >
+                                                    Max size 1 mb.
+                                                </span>{" "}
+                                                <span
+                                                    className={`${
+                                                        imageError &&
+                                                        imageError.type ===
+                                                            "count"
+                                                            ? "text-red-500 text-sm"
+                                                            : ""
+                                                    }`}
+                                                >
+                                                    {selectedImages.length}/3
+                                                    images.
+                                                </span>
+                                            </p>
+                                        </div>
+
+                                        {/* Preview selected images */}
+                                        <div className="flex flex-wrap gap-2 mt-2">
+                                            {selectedImages.map(
+                                                (imgFile, index) => (
+                                                    <div
                                                         key={index}
-                                                        src={img}
-                                                        alt={`Project Image ${
-                                                            index + 1
-                                                        }`}
-                                                        className="h-12 w-12 object-cover rounded"
-                                                    />
+                                                        className="relative  w-1/4 rounded-lg"
+                                                    >
+                                                        <Image
+                                                            src={URL.createObjectURL(
+                                                                imgFile
+                                                            )}
+                                                            width={283}
+                                                            height={200}
+                                                            alt={`Selected Image ${
+                                                                index + 1
+                                                            }`}
+                                                            className="rounded-lg self-center object-center"
+                                                        />
+                                                        <Button
+                                                            className="absolute -top-3 -right-3 rounded-full"
+                                                            size="icon"
+                                                            variant="outline"
+                                                            onClick={() => {
+                                                                setSelectedImages(
+                                                                    selectedImages.filter(
+                                                                        (
+                                                                            _,
+                                                                            i
+                                                                        ) =>
+                                                                            i !==
+                                                                            index
+                                                                    )
+                                                                ); // Remove image from selected list
+                                                            }}
+                                                        >
+                                                            <X className="w-4 h-4" />
+                                                        </Button>
+                                                    </div>
                                                 )
                                             )}
                                         </div>
@@ -286,17 +420,53 @@ const ProjectEdit: React.FC<ProjectEditProps> = ({ project, onSubmit }) => {
                                                 }
                                             }}
                                         />
+                                        {videoError && (
+                                            <p className="text-red-500 text-sm ml-auto mr-2">
+                                                Provide a valid YouTube video
+                                                ember URL.
+                                            </p>
+                                        )}
                                         <div className="flex flex-wrap gap-2">
-                                            {projectData.videos.map(
+                                            {selectedVideos.map(
                                                 (vid, index) => (
-                                                    <a
+                                                    <Button
+                                                        asChild
                                                         key={index}
-                                                        href={vid}
-                                                        target="_blank"
-                                                        className="text-xs text-primary underline"
+                                                        variant="outline"
+                                                        className="border-primary"
                                                     >
-                                                        Video {index + 1}
-                                                    </a>
+                                                        <div className="flex items-center justify-center">
+                                                            {/* Link to the video URL */}
+                                                            <Link
+                                                                href={vid}
+                                                                target="_blank"
+                                                                className="text-xs"
+                                                            >
+                                                                {vid}
+                                                            </Link>
+
+                                                            {/* Button to remove the video */}
+                                                            <Button
+                                                                className="hover:bg-transparent ml-2"
+                                                                variant="ghost"
+                                                                onClick={() => {
+                                                                    // Update state by removing the selected video
+                                                                    setSelectedVideos(
+                                                                        selectedVideos.filter(
+                                                                            (
+                                                                                _,
+                                                                                i
+                                                                            ) =>
+                                                                                i !==
+                                                                                index
+                                                                        )
+                                                                    );
+                                                                }}
+                                                            >
+                                                                <X className="w-4 h-4" />
+                                                            </Button>
+                                                        </div>
+                                                    </Button>
                                                 )
                                             )}
                                         </div>
