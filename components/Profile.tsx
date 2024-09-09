@@ -20,8 +20,10 @@ import {
     Linkedin,
     Edit2,
     Eye,
+    ArrowLeft,
+    Plus,
 } from "lucide-react";
-import { useUser } from "@clerk/clerk-react";
+import { useUser, useAuth } from "@clerk/clerk-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "./ui/badge";
 import { Tags } from "./ui/tags";
@@ -29,7 +31,6 @@ import { Input } from "./ui/input";
 import { Label } from "./ui/label";
 import ProfileProjectsCard from "./ProfileProjectsCard";
 import { Textarea } from "./ui/textarea";
-import { useAuth } from "@clerk/nextjs";
 
 type ProjectTabTypes = "active" | "collaborations" | "archived";
 type UserProfile = {
@@ -84,6 +85,16 @@ const Profile = () => {
         archived: false,
     });
 
+    // This state can be part of the larger project state
+    const [images, setImages] = useState({
+        primary: null,
+        gallery: { 1: null, 2: null, 3: null },
+    });
+
+    useEffect(() => {
+        console.log(images);
+    }, [images]);
+
     const toggleTabCollapse = (tabName: ProjectTabTypes) => {
         setTabCollapsed((prevState) => ({
             ...prevState,
@@ -94,11 +105,11 @@ const Profile = () => {
     const handleCopy = (text: string, platform: string) => {
         let textCopy = text;
         if (platform === "portfolio") {
-            textCopy = `https://${userProfile.portfolio}`;
+            textCopy = `https://${userProfile?.portfolio}`;
         } else if (platform === "linkedin") {
-            textCopy = `https://linkedin.com/in/${userProfile.linkedin}`;
+            textCopy = `https://linkedin.com/in/${userProfile?.linkedin}`;
         } else if (platform === "github") {
-            textCopy = `https://github.com/${userProfile.github}`;
+            textCopy = `https://github.com/${userProfile?.github}`;
         }
 
         navigator.clipboard.writeText(textCopy);
@@ -350,6 +361,48 @@ const Profile = () => {
         setShowPassword((prev) => !prev);
     };
 
+    const handleOnChangeFile = (
+        event: any,
+        type: string,
+        galleryIndex: number
+    ) => {
+        if (type === "primary")
+            setImages({ ...images, primary: event.target.files[0] });
+        else if (type === "gallery") {
+            setImages({
+                ...images,
+                gallery: {
+                    ...images.gallery,
+                    [galleryIndex]: "",
+                },
+            });
+        }
+    };
+
+    const uploadImage = async () => {
+        const token = await getToken({ template: "supabase" });
+        const formData = new FormData();
+        formData.append("primaryImage", images?.primary ?? "");
+        try {
+            const response = await fetch("/api/images", {
+                method: "POST",
+                headers: {
+                    Authentication: `Bearer ${token}`,
+                },
+                body: formData,
+            });
+
+            const data = await response.json();
+            console.log(data.message);
+        } catch (error) {
+            console.error("Error checking user in Supabase:", error);
+        }
+    };
+
+    const handleSubmitNewProject = async () => {
+        uploadImage();
+    };
+
     if (loading) {
         return <p>Loading...</p>; //!Change the loading state
     }
@@ -415,7 +468,7 @@ const Profile = () => {
                             </Avatar>
 
                             <div className="flex flex-col ml-2">
-                                {userProfile.first_name ? (
+                                {userProfile?.first_name ? (
                                     <h2 className="text-md">
                                         {userProfile?.first_name}{" "}
                                         {userProfile?.last_name}
@@ -434,13 +487,13 @@ const Profile = () => {
                                 <div className="flex justify-between items-center w-full">
                                     <p className="text-xs text-muted-foreground">
                                         {/* {userProfile.linkedin?userProfile.linkedin:'--'} */}
-                                        {userProfile.linkedin ? (
+                                        {userProfile?.linkedin ? (
                                             <a
                                                 className=" to-blue-300"
-                                                href={`https://linkedin.com/in/${userProfile.linkedin}`}
+                                                href={`https://linkedin.com/in/${userProfile?.linkedin}`}
                                                 target="_blank"
                                             >
-                                                {userProfile.linkedin}
+                                                {userProfile?.linkedin}
                                             </a>
                                         ) : (
                                             "--"
@@ -466,13 +519,13 @@ const Profile = () => {
                                 <div className="flex justify-between items-center w-full">
                                     <p className="text-xs text-muted-foreground">
                                         {/* {userProfile.github?userProfile.github:'--'} */}
-                                        {userProfile.github ? (
+                                        {userProfile?.github ? (
                                             <a
                                                 className=" to-blue-300"
-                                                href={`https://github.com/${userProfile.github}`}
+                                                href={`https://github.com/${userProfile?.github}`}
                                                 target="_blank"
                                             >
-                                                {userProfile.github}
+                                                {userProfile?.github}
                                             </a>
                                         ) : (
                                             "--"
@@ -497,13 +550,13 @@ const Profile = () => {
                                 <CircleUser className="w-4 h-4" />
                                 <div className="flex justify-between items-center w-full">
                                     <p className="text-xs text-muted-foreground">
-                                        {userProfile.portfolio ? (
+                                        {userProfile?.portfolio ? (
                                             <a
                                                 className=" to-blue-300"
-                                                href={`https://${userProfile.portfolio}`}
+                                                href={`https://www.${userProfile?.portfolio}`}
                                                 target="_blank"
                                             >
-                                                {userProfile.portfolio}
+                                                {userProfile?.portfolio}
                                             </a>
                                         ) : (
                                             "--"
@@ -563,7 +616,7 @@ const Profile = () => {
                                             <Input
                                                 id="first_name"
                                                 value={
-                                                    updatedProfile.first_name
+                                                    updatedProfile?.first_name
                                                 }
                                                 placeholder="First Name"
                                                 className="text-xs"
@@ -740,13 +793,12 @@ const Profile = () => {
                         <div className="flex flex-col gap-2 md:w-1/2">
                             <h2 className="text-sm">Bio</h2>
                             <p className="text-xs mb-2">
-                                {userProfile.bio ? userProfile.bio : "--"}
+                                {userProfile?.bio ? userProfile?.bio : "--"}
                             </p>
                             <div className="flex flex-col gap-2">
                                 <h2 className="text-sm">Interests</h2>
                                 <div className="flex flex-wrap gap-2">
-                                    {userProfile.interests &&
-                                    userProfile?.interests.length !== 0
+                                    {userProfile?.interests.length != 0
                                         ? userProfile?.interests.map(
                                               (interest, idx) => (
                                                   <Badge
@@ -766,9 +818,8 @@ const Profile = () => {
                             <div className="flex flex-col gap-2 mt-4 md:mt-0">
                                 <h2 className="text-sm">Top Skills</h2>
                                 <div className="flex flex-wrap gap-2">
-                                    {userProfile.skills &&
-                                    userProfile?.skills.length !== 0
-                                        ? userProfile.skills.map(
+                                    {userProfile?.skills.length != 0
+                                        ? userProfile?.skills.map(
                                               (skill, idx) => (
                                                   <Badge
                                                       key={idx}
@@ -922,8 +973,11 @@ const Profile = () => {
                                 Search
                             </Button>
                         </div>
-                        <Button className="text-sm" asChild>
-                            <Link href="/projects/create">Create</Link>
+                        <Button
+                            onClick={() => setTab("create")}
+                            className="text-sm"
+                        >
+                            Create
                         </Button>
                     </div>
 
@@ -955,6 +1009,64 @@ const Profile = () => {
                     />
                 </div>
             )}
+
+            {tab === "create" && (
+                <div className="flex flex-col">
+                    <ArrowLeft onClick={() => setTab("projects")} />
+                    <h1> Create a Project</h1>
+                    <h2>Project Name</h2>
+                    <input type="text" placeholder="Contribu" />
+                    <h2>Description</h2>
+                    <textarea placeholder="Showcase your projects, get feedback, and collaborate with others. Find projects to work on and build projects you care about." />
+                    <h2>Images</h2>
+                    {/* Change the name of these labels? */}
+                    <div className="flex flex-row">
+                        <h3>Primary Image: </h3>
+                        <input
+                            onChange={(event) =>
+                                handleOnChangeFile(event, "primary", 0)
+                            }
+                            type="file"
+                            accept="image/*"
+                        />
+                    </div>
+                    <div className="flex flex-row">
+                        <h3>Other Images: </h3>
+                        <input type="file" accept="image/*" />
+                    </div>
+                    <h2>Github Link</h2>
+                    <input
+                        type="text"
+                        placeholder="https://github.com/contribu404"
+                    />
+                    <h2>Demo Link</h2>
+                    <input
+                        type="text"
+                        placeholder="https://www.contribu.dev/"
+                    />
+                    <h2>Tech Stack</h2>
+                    <div className="flex flex-row">
+                        <input type="text" placeholder="React" />
+                        <Plus />
+                    </div>
+                    <div className="flex flex-row">
+                        <h2>Open for collaboration?</h2>
+                        <input type="checkbox" value="yes" />
+                    </div>
+                    {/* Only show if 'open for collaboration' is true */}
+                    <h2>Skills you're looking for in collaborators</h2>
+                    <input type="text" placeholder="UI/UX Design" />
+                    {/* Only show if 'open for collaboration' is false */}
+                    <div className="flex flex-row">
+                        <h2>Would you like to archive this project?</h2>
+                        <input type="checkbox" value="yes" />
+                    </div>
+                    <button onClick={handleSubmitNewProject}>
+                        Create Project
+                    </button>
+                </div>
+            )}
+            {tab === "editProject"}
 
             {tab === "pitches" && (
                 <div className="flex flex-col gap-2 w-full mb-20">
