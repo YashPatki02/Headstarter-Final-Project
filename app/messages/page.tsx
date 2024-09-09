@@ -34,41 +34,40 @@ type Message = {
     project_id: number;
     sender_id: string;
     status: string;
-  };
-  
-  type Messages = {
+};
+
+type Messages = {
     inbox: Message[];
     sent: Message[];
-  };
+};
 const MessagesPage = () => {
     const [tab, setTab] = useState("inbox");
     const { getToken } = useAuth();
     const { user: userData } = useUser();
     const [loading, setLoading] = useState(true);
-    useEffect(()=>{
+    useEffect(() => {
         const fetchMessages = async () => {
-          try {
-            // const token = await getToken();
-            const token = await getToken({ template: "supabase" });
-            const res = await fetch(`api/messages`, {
-            method:'GET',
-              headers: {
-                Authorization: `Bearer ${token}`,
-                "Content-Type": "application/json",
-              },
-            });
-            const  {inbox, sent}  = await res.json();
-            console.log({inbox:sent, sent:sent})
-            setMessages({inbox:sent, sent:sent})
-          } catch (error) {
-            console.log(error);
-          } finally {
-            setLoading(false);
-          }
+            try {
+                // const token = await getToken();
+                const token = await getToken({ template: "supabase" });
+                const res = await fetch(`api/messages`, {
+                    method: "GET",
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                        "Content-Type": "application/json",
+                    },
+                });
+                const { inbox, sent } = await res.json();
+                console.log({ inbox: sent, sent: sent });
+                setMessages({ inbox: sent, sent: sent });
+            } catch (error) {
+                console.log(error);
+            } finally {
+                setLoading(false);
+            }
         };
         fetchMessages();
-
-    },[])
+    }, []);
     const avatarUrls = [
         {
             username: "user1",
@@ -95,9 +94,7 @@ const MessagesPage = () => {
     const user = {
         id: "101",
     };
-    const [messages, setMessages] = useState<Messages>({inbox: [],
-      sent: []
-    });
+    const [messages, setMessages] = useState<Messages>({ inbox: [], sent: [] });
     const dmessages = [
         {
             message_id: 1,
@@ -167,8 +164,9 @@ const MessagesPage = () => {
                 break;
         }
     };
-    if(loading){
-        return <h1>Loading...</h1>
+    
+    if (loading) {
+        return <h1>Loading...</h1>;
     }
     return (
         <div className="flex flex-col gap-4 items-start mt-4 mb-20">
@@ -228,14 +226,9 @@ const MessagesPage = () => {
                         <TableBody>
                             {messages.inbox
                                 // .filter((message) => message.to_id === user.id)
-                                .map((message,index) => (
-                                    <TableRow
-                                        key={index}
-                                        className="text-xs"
-                                    >
-                                        <TableCell>
-                                            {message.name}
-                                        </TableCell>
+                                .map((message, index) => (
+                                    <TableRow key={index} className="text-xs">
+                                        <TableCell>{message.name}</TableCell>
                                         <TableCell>{message.message}</TableCell>
                                         <TableCell>
                                             <div className="flex ml-5 justify-start">
@@ -245,9 +238,20 @@ const MessagesPage = () => {
                                             </div>
                                         </TableCell>
                                         <TableCell>
-                                            {message.owner_img_url?(<AvatarCircles
-                                                avatarUrls={message.owner_img_url}
-                                            />): message.owner_username}
+                                            {message.owner_img_url ? (
+                                                <AvatarCircles
+                                                    avatarUrls={[
+                                                        {
+                                                            url: message.owner_img_url,
+                                                            username:
+                                                                message.owner_username,
+                                                            profileLink: `/${message.owner_username}`,
+                                                        },
+                                                    ]}
+                                                />
+                                            ) : (
+                                                message.owner_username
+                                            )}
                                         </TableCell>
                                         <TableCell>
                                             <div className="flex items-center justify-start gap-2">
@@ -262,20 +266,26 @@ const MessagesPage = () => {
                                                 >
                                                     open
                                                 </Button>
-                                                {message.status=='pending'?
-                                                (<><Button
-                                                        className="text-xs hover:border-green-500"
-                                                        variant="outline"
-                                                        size="icon"
-                                                    >
-                                                        <Check className="w-4 h-4 text-green-500" />
-                                                    </Button><Button
-                                                        className="text-xs hover:border-red-500"
-                                                        variant="outline"
-                                                        size="icon"
-                                                    >
+                                                {message.status == "pending" ? (
+                                                    <>
+                                                        <Button
+                                                            className="text-xs hover:border-green-500"
+                                                            variant="outline"
+                                                            size="icon"
+                                                        >
+                                                            <Check className="w-4 h-4 text-green-500" />
+                                                        </Button>
+                                                        <Button
+                                                            className="text-xs hover:border-red-500"
+                                                            variant="outline"
+                                                            size="icon"
+                                                        >
                                                             <X className="w-4 h-4 text-red-500" />
-                                                        </Button></>):'pending'}
+                                                        </Button>
+                                                    </>
+                                                ) : (
+                                                    "pending"
+                                                )}
                                             </div>
                                         </TableCell>
                                     </TableRow>
@@ -304,14 +314,9 @@ const MessagesPage = () => {
                                 // .filter(
                                 //     (message) => message.from_id === user.id
                                 // )
-                                .map((message,index) => (
-                                    <TableRow
-                                        key={index}
-                                        className="text-xs"
-                                    >
-                                        <TableCell>
-                                            {message.name}
-                                        </TableCell>
+                                .map((message, index) => (
+                                    <TableRow key={index} className="text-xs">
+                                        <TableCell>{message.name}</TableCell>
                                         <TableCell>{message.message}</TableCell>
                                         <TableCell>
                                             <div className="flex ml-5 justify-start">
@@ -321,9 +326,20 @@ const MessagesPage = () => {
                                             </div>
                                         </TableCell>
                                         <TableCell>
-                                            {message.owner_img_url?(<AvatarCircles
-                                                avatarUrls={message.owner_img_url}
-                                            />): message.owner_username}
+                                            {message.owner_img_url ? (
+                                                <AvatarCircles
+                                                    avatarUrls={[
+                                                        {
+                                                            url: message.owner_img_url,
+                                                            username:
+                                                                message.owner_username,
+                                                            profileLink: `/${message.owner_username}`,
+                                                        },
+                                                    ]}
+                                                />
+                                            ) : (
+                                                message.owner_username
+                                            )}
                                         </TableCell>
                                         <TableCell>
                                             <div className="flex items-center justify-start gap-2">
@@ -381,7 +397,7 @@ const MessagesPage = () => {
                             </TableRow>
                         </TableHeader>
                         <TableBody>
-                            {messages.map((message) => (
+                            {messages.inbox.map((message) => (
                                 <TableRow
                                     key={message.message}
                                     className="text-xs"
@@ -394,14 +410,67 @@ const MessagesPage = () => {
                                         </div>
                                     </TableCell>
                                     <TableCell>
-                                        {user.id === message.to_id ? (
+                                        {user.id !== message.sender_id ? (
                                             <ArrowDownLeft className="w-4 h-4 text-red-500" />
                                         ) : (
                                             <ArrowUpRight className="w-4 h-4 text-green-500" />
                                         )}
                                     </TableCell>
                                     <TableCell>
-                                        {user.id === message.to_id ? (
+                                        {user.id === message.sender_id ? (
+                                            <div className="flex flex-col justify-center items-center">
+                                                <p className="text-xs">From</p>
+                                                <AvatarCircles
+                                                    avatarUrls={[avatarUrls[0]]}
+                                                />
+                                            </div>
+                                        ) : (
+                                            <div className="flex flex-col justify-center items-center">
+                                                <p className="text-xs">To</p>
+                                                <AvatarCircles
+                                                    avatarUrls={[avatarUrls[0]]}
+                                                />
+                                            </div>
+                                        )}
+                                    </TableCell>
+                                    <TableCell>
+                                        {message.status === "pending" ? (
+                                            <p className="text-xs text-yellow-500">
+                                                Pending
+                                            </p>
+                                        ) : message.status === "accepted" ? (
+                                            <p className="text-xs text-green-500">
+                                                Accepted
+                                            </p>
+                                        ) : (
+                                            <p className="text-xs text-red-500">
+                                                Rejected
+                                            </p>
+                                        )}
+                                    </TableCell>
+                                </TableRow>
+                            ))}
+                            {messages.sent.map((message) => (
+                                <TableRow
+                                    key={message.message}
+                                    className="text-xs"
+                                >
+                                    <TableCell>CardGenAI- Flashcard</TableCell>
+                                    <TableCell>{message.message}</TableCell>
+                                    <TableCell>
+                                        <div className="flex ml-5 justify-start">
+                                            {matchPlatform(message.platform)}
+                                        </div>
+                                    </TableCell>
+                                    <TableCell>
+                                        {user.id === message.sender_id ? (
+                                            <ArrowDownLeft className="w-4 h-4 text-red-500" />
+                                        ) : (
+                                            <ArrowUpRight className="w-4 h-4 text-green-500" />
+                                        )}
+                                    </TableCell>
+                                    <TableCell>
+                                        {user.id === message.sender_id ? (
                                             <div className="flex flex-col justify-center items-center">
                                                 <p className="text-xs">From</p>
                                                 <AvatarCircles

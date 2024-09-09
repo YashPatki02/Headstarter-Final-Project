@@ -43,7 +43,7 @@ const AvatarCircles = ({
                                 />
                             </Link>
                         </TooltipTrigger>
-                        <TooltipContent className="z-50" side="top" align="start">
+                        <TooltipContent className="z-50" side="top" align="center">
                             <p className="text-xs text-muted-foreground">
                                 @{username}
                             </p>
