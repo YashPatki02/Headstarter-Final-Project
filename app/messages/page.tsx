@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
     Table,
     TableBody,
@@ -20,10 +20,55 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import AvatarCircles from "@/components/magicui/avatar-circles";
-
+import { useAuth } from "@clerk/nextjs";
+import { useUser } from "@clerk/clerk-react";
+type Message = {
+    description: string;
+    message: string;
+    message_creation: string;
+    name: string;
+    owner_id: string;
+    owner_img_url: string;
+    owner_username: string;
+    platform: string;
+    project_id: number;
+    sender_id: string;
+    status: string;
+  };
+  
+  type Messages = {
+    inbox: Message[];
+    sent: Message[];
+  };
 const MessagesPage = () => {
     const [tab, setTab] = useState("inbox");
+    const { getToken } = useAuth();
+    const { user: userData } = useUser();
+    const [loading, setLoading] = useState(true);
+    useEffect(()=>{
+        const fetchMessages = async () => {
+          try {
+            // const token = await getToken();
+            const token = await getToken({ template: "supabase" });
+            const res = await fetch(`api/messages`, {
+            method:'GET',
+              headers: {
+                Authorization: `Bearer ${token}`,
+                "Content-Type": "application/json",
+              },
+            });
+            const  {inbox, sent}  = await res.json();
+            console.log({inbox:sent, sent:sent})
+            setMessages({inbox:sent, sent:sent})
+          } catch (error) {
+            console.log(error);
+          } finally {
+            setLoading(false);
+          }
+        };
+        fetchMessages();
 
+    },[])
     const avatarUrls = [
         {
             username: "user1",
@@ -50,8 +95,10 @@ const MessagesPage = () => {
     const user = {
         id: "101",
     };
-
-    const messages = [
+    const [messages, setMessages] = useState<Messages>({inbox: [],
+      sent: []
+    });
+    const dmessages = [
         {
             message_id: 1,
             from_id: "101",
@@ -120,7 +167,9 @@ const MessagesPage = () => {
                 break;
         }
     };
-
+    if(loading){
+        return <h1>Loading...</h1>
+    }
     return (
         <div className="flex flex-col gap-4 items-start mt-4 mb-20">
             <div className="flex justify-between items-center w-full mb-2">
@@ -177,15 +226,15 @@ const MessagesPage = () => {
                             </TableRow>
                         </TableHeader>
                         <TableBody>
-                            {messages
-                                .filter((message) => message.to_id === user.id)
-                                .map((message) => (
+                            {messages.inbox
+                                // .filter((message) => message.to_id === user.id)
+                                .map((message,index) => (
                                     <TableRow
-                                        key={message.message_id}
+                                        key={index}
                                         className="text-xs"
                                     >
                                         <TableCell>
-                                            CardGenAI - Flashcards
+                                            {message.name}
                                         </TableCell>
                                         <TableCell>{message.message}</TableCell>
                                         <TableCell>
@@ -196,9 +245,9 @@ const MessagesPage = () => {
                                             </div>
                                         </TableCell>
                                         <TableCell>
-                                            <AvatarCircles
-                                                avatarUrls={[avatarUrls[0]]}
-                                            />
+                                            {message.owner_img_url?(<AvatarCircles
+                                                avatarUrls={message.owner_img_url}
+                                            />): message.owner_username}
                                         </TableCell>
                                         <TableCell>
                                             <div className="flex items-center justify-start gap-2">
@@ -213,20 +262,20 @@ const MessagesPage = () => {
                                                 >
                                                     open
                                                 </Button>
-                                                <Button
-                                                    className="text-xs hover:border-green-500"
-                                                    variant="outline"
-                                                    size="icon"
-                                                >
-                                                    <Check className="w-4 h-4 text-green-500" />
-                                                </Button>
-                                                <Button
-                                                    className="text-xs hover:border-red-500"
-                                                    variant="outline"
-                                                    size="icon"
-                                                >
-                                                    <X className="w-4 h-4 text-red-500" />
-                                                </Button>
+                                                {message.status=='pending'?
+                                                (<><Button
+                                                        className="text-xs hover:border-green-500"
+                                                        variant="outline"
+                                                        size="icon"
+                                                    >
+                                                        <Check className="w-4 h-4 text-green-500" />
+                                                    </Button><Button
+                                                        className="text-xs hover:border-red-500"
+                                                        variant="outline"
+                                                        size="icon"
+                                                    >
+                                                            <X className="w-4 h-4 text-red-500" />
+                                                        </Button></>):'pending'}
                                             </div>
                                         </TableCell>
                                     </TableRow>
@@ -251,17 +300,17 @@ const MessagesPage = () => {
                             </TableRow>
                         </TableHeader>
                         <TableBody>
-                            {messages
-                                .filter(
-                                    (message) => message.from_id === user.id
-                                )
-                                .map((message) => (
+                            {messages.sent
+                                // .filter(
+                                //     (message) => message.from_id === user.id
+                                // )
+                                .map((message,index) => (
                                     <TableRow
-                                        key={message.message_id}
+                                        key={index}
                                         className="text-xs"
                                     >
                                         <TableCell>
-                                            CardGenAI - Flashcards
+                                            {message.name}
                                         </TableCell>
                                         <TableCell>{message.message}</TableCell>
                                         <TableCell>
@@ -272,9 +321,9 @@ const MessagesPage = () => {
                                             </div>
                                         </TableCell>
                                         <TableCell>
-                                            <AvatarCircles
-                                                avatarUrls={[avatarUrls[0]]}
-                                            />
+                                            {message.owner_img_url?(<AvatarCircles
+                                                avatarUrls={message.owner_img_url}
+                                            />): message.owner_username}
                                         </TableCell>
                                         <TableCell>
                                             <div className="flex items-center justify-start gap-2">
@@ -293,7 +342,7 @@ const MessagesPage = () => {
                                                     className="text-xs"
                                                     variant="destructive"
                                                 >
-                                                    undo
+                                                    {message.status}
                                                 </Button>
                                             </div>
                                         </TableCell>
