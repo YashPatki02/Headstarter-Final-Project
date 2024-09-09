@@ -4,6 +4,7 @@ import ProfileOverview from "@/components/profile/profile-overview";
 import SkillsAndInterests from "@/components/profile/SkillsAndInterests";
 import Projects from "@/components/profile/Projects";
 import SocialLinks from "@/components/profile/SocialLinks";
+import Profile from "@/components/Profile";
 // import dynamic from "next/dynamic";
 
 // // Lazy load the SocialLinks component
@@ -71,15 +72,16 @@ function ProfilePage(/* { user } */) {
         //! Make an api call
     };
     return (
-        <div className="max-w-4xl mx-auto py-8">
-            <ProfileOverview user={user} />
+        <>
+            {/* <ProfileOverview user={user} />
             <SocialLinks user={user} />
             <SkillsAndInterests
                 user={user}
                 onUpdateSkills={handleUpdateSkills}
             />
-            <Projects user={user} />
-        </div>
+            <Projects user={user} /> */}
+            <Profile />
+        </>
     );
 }
 
