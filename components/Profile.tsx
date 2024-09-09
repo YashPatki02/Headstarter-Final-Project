@@ -31,6 +31,7 @@ import { Input } from "./ui/input";
 import { Label } from "./ui/label";
 import ProfileProjectsCard from "./ProfileProjectsCard";
 import { Textarea } from "./ui/textarea";
+import ProjectEdit from "./ProjectEdit";
 
 type ProjectTabTypes = "active" | "collaborations" | "archived";
 type UserProfile = {
@@ -1011,60 +1012,63 @@ const Profile = () => {
             )}
 
             {tab === "create" && (
-                <div className="flex flex-col">
-                    <ArrowLeft onClick={() => setTab("projects")} />
-                    <h1> Create a Project</h1>
-                    <h2>Project Name</h2>
-                    <input type="text" placeholder="Contribu" />
-                    <h2>Description</h2>
-                    <textarea placeholder="Showcase your projects, get feedback, and collaborate with others. Find projects to work on and build projects you care about." />
-                    <h2>Images</h2>
-                    {/* Change the name of these labels? */}
-                    <div className="flex flex-row">
-                        <h3>Primary Image: </h3>
-                        <input
-                            onChange={(event) =>
-                                handleOnChangeFile(event, "primary", 0)
-                            }
-                            type="file"
-                            accept="image/*"
-                        />
-                    </div>
-                    <div className="flex flex-row">
-                        <h3>Other Images: </h3>
-                        <input type="file" accept="image/*" />
-                    </div>
-                    <h2>Github Link</h2>
-                    <input
-                        type="text"
-                        placeholder="https://github.com/contribu404"
-                    />
-                    <h2>Demo Link</h2>
-                    <input
-                        type="text"
-                        placeholder="https://www.contribu.dev/"
-                    />
-                    <h2>Tech Stack</h2>
-                    <div className="flex flex-row">
-                        <input type="text" placeholder="React" />
-                        <Plus />
-                    </div>
-                    <div className="flex flex-row">
-                        <h2>Open for collaboration?</h2>
-                        <input type="checkbox" value="yes" />
-                    </div>
-                    {/* Only show if 'open for collaboration' is true */}
-                    <h2>Skills you're looking for in collaborators</h2>
-                    <input type="text" placeholder="UI/UX Design" />
-                    {/* Only show if 'open for collaboration' is false */}
-                    <div className="flex flex-row">
-                        <h2>Would you like to archive this project?</h2>
-                        <input type="checkbox" value="yes" />
-                    </div>
-                    <button onClick={handleSubmitNewProject}>
-                        Create Project
-                    </button>
-                </div>
+                <ProjectEdit    
+                    onSubmit={handleSubmitNewProject} // Create mode
+                />
+                // <div className="flex flex-col">
+                //     <ArrowLeft onClick={() => setTab("projects")} />
+                //     <h1> Create a Project</h1>
+                //     <h2>Project Name</h2>
+                //     <input type="text" placeholder="Contribu" />
+                //     <h2>Description</h2>
+                //     <textarea placeholder="Showcase your projects, get feedback, and collaborate with others. Find projects to work on and build projects you care about." />
+                //     <h2>Images</h2>
+                //     {/* Change the name of these labels? */}
+                //     <div className="flex flex-row">
+                //         <h3>Primary Image: </h3>
+                //         <input
+                //             onChange={(event) =>
+                //                 handleOnChangeFile(event, "primary", 0)
+                //             }
+                //             type="file"
+                //             accept="image/*"
+                //         />
+                //     </div>
+                //     <div className="flex flex-row">
+                //         <h3>Other Images: </h3>
+                //         <input type="file" accept="image/*" />
+                //     </div>
+                //     <h2>Github Link</h2>
+                //     <input
+                //         type="text"
+                //         placeholder="https://github.com/contribu404"
+                //     />
+                //     <h2>Demo Link</h2>
+                //     <input
+                //         type="text"
+                //         placeholder="https://www.contribu.dev/"
+                //     />
+                //     <h2>Tech Stack</h2>
+                //     <div className="flex flex-row">
+                //         <input type="text" placeholder="React" />
+                //         <Plus />
+                //     </div>
+                //     <div className="flex flex-row">
+                //         <h2>Open for collaboration?</h2>
+                //         <input type="checkbox" value="yes" />
+                //     </div>
+                //     {/* Only show if 'open for collaboration' is true */}
+                //     <h2>Skills you're looking for in collaborators</h2>
+                //     <input type="text" placeholder="UI/UX Design" />
+                //     {/* Only show if 'open for collaboration' is false */}
+                //     <div className="flex flex-row">
+                //         <h2>Would you like to archive this project?</h2>
+                //         <input type="checkbox" value="yes" />
+                //     </div>
+                //     <button onClick={handleSubmitNewProject}>
+                //         Create Project
+                //     </button>
+                // </div>
             )}
             {tab === "editProject"}
 
