@@ -15,6 +15,10 @@ import {
 } from "@/components/ui/select";
 import { STATUS_MAP } from "@/lib/constants";
 import { ProjectType } from "@/lib/types";
+import { Link2, UploadIcon, X } from "lucide-react";
+import Image from "next/image";
+import { Button } from "./ui/button";
+import Link from "next/link";
 
 type ProjectEditProps = {
     project?: ProjectType; // Optional project prop for editing
@@ -34,6 +38,18 @@ const ProjectEdit: React.FC<ProjectEditProps> = ({ project, onSubmit }) => {
         collaboration_skills: [],
     });
 
+    // Local state for storing selected files and image errors
+    const [imageError, setImageError] = useState<{
+        type: string;
+        error: boolean;
+    }>({
+        type: "",
+        error: false,
+    });
+    const [videoError, setVideoError] = useState<boolean>(false);
+    const [selectedImages, setSelectedImages] = useState<File[]>([]);
+    const [selectedVideos, setSelectedVideos] = useState<string[]>([]); // Store video URLs locally
+
     // If a project is passed, prefill the form
     useEffect(() => {
         if (project) {
@@ -41,10 +57,18 @@ const ProjectEdit: React.FC<ProjectEditProps> = ({ project, onSubmit }) => {
         }
     }, [project]);
 
+    useEffect(() => {
+        if (selectedImages.length < 3) {
+            setImageError({ type: "", error: false });
+        }
+    }, [selectedImages]);
+
+    // Handle input change for regular fields
     const handleInputChange = (field: string, value: string | string[]) => {
         setProjectData({ ...projectData, [field]: value });
     };
 
+    // Handle tech stack or skills tags change
     const handleTagsChange = (field: string, tags: string[]) => {
         setProjectData({ ...projectData, [field]: tags });
     };
@@ -58,14 +82,50 @@ const ProjectEdit: React.FC<ProjectEditProps> = ({ project, onSubmit }) => {
     };
 
     const handleAddVideo = (url: string) => {
-        setProjectData({
-            ...projectData,
-            videos: [...projectData.videos, url],
-        });
+        setVideoError(false);
+        if (url.trim() === "" || !url.includes("youtube.com")) {
+            setVideoError(true);
+            return;
+        }
+        setSelectedVideos((prevVideos) => [...prevVideos, url]);
     };
 
-    const handleSubmit = () => {
-        onSubmit(projectData); // Call the onSubmit function passed as a prop
+    // Handle the form submission: upload images and update project data
+    const handleSubmit = async () => {
+        try {
+            const uploadedImages: string[] = [];
+
+            // Upload selected images to Supabase (or any storage service) during form submission
+            for (const file of selectedImages) {
+                const fileName = `${Date.now()}_${file.name}`; // Generate unique file name
+
+                // Upload image to Supabase bucket
+                // const { data, error } = await supabase.storage
+                //     .from("your-bucket-name")
+                //     .upload(`public/${fileName}`, file);
+
+                // if (error) {
+                //     console.error("Error uploading image:", error);
+                //     return;
+                // }
+
+                // Get the public URL of the uploaded image
+                const publicURL = `https://your-supabase-url.com/storage/v1/object/public/${fileName}`;
+                uploadedImages.push(publicURL); // Add the public URL to the array
+            }
+
+            // Update projectData with the uploaded image URLs and selected video URLs
+            const updatedProjectData = {
+                ...projectData,
+                images: uploadedImages,
+                videos: selectedVideos, // Use local state for videos
+            };
+
+            // Call the onSubmit function passed as a prop with the updated data
+            onSubmit(updatedProjectData);
+        } catch (err) {
+            console.error("Error submitting project data:", err);
+        }
     };
 
     return (
@@ -273,17 +333,53 @@ const ProjectEdit: React.FC<ProjectEditProps> = ({ project, onSubmit }) => {
                                                 }
                                             }}
                                         />
+                                        {videoError && (
+                                            <p className="text-red-500 text-sm ml-auto mr-2">
+                                                Provide a valid YouTube video
+                                                ember URL.
+                                            </p>
+                                        )}
                                         <div className="flex flex-wrap gap-2">
-                                            {projectData.videos.map(
+                                            {selectedVideos.map(
                                                 (vid, index) => (
-                                                    <a
+                                                    <Button
+                                                        asChild
                                                         key={index}
-                                                        href={vid}
-                                                        target="_blank"
-                                                        className="text-xs text-primary underline"
+                                                        variant="outline"
+                                                        className="border-primary"
                                                     >
-                                                        Video {index + 1}
-                                                    </a>
+                                                        <div className="flex items-center justify-center">
+                                                            {/* Link to the video URL */}
+                                                            <Link
+                                                                href={vid}
+                                                                target="_blank"
+                                                                className="text-xs"
+                                                            >
+                                                                {vid}
+                                                            </Link>
+
+                                                            {/* Button to remove the video */}
+                                                            <Button
+                                                                className="hover:bg-transparent ml-2"
+                                                                variant="ghost"
+                                                                onClick={() => {
+                                                                    // Update state by removing the selected video
+                                                                    setSelectedVideos(
+                                                                        selectedVideos.filter(
+                                                                            (
+                                                                                _,
+                                                                                i
+                                                                            ) =>
+                                                                                i !==
+                                                                                index
+                                                                        )
+                                                                    );
+                                                                }}
+                                                            >
+                                                                <X className="w-4 h-4" />
+                                                            </Button>
+                                                        </div>
+                                                    </Button>
                                                 )
                                             )}
                                         </div>
